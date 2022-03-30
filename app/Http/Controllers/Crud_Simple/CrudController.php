@@ -26,7 +26,9 @@ class CrudController extends Controller
      */
     public function index()
     {
-		$postsAll = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->orderBy('wpBlog_created_at', 'desc')->get(); //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
-        return view('crud_simple.index')->with(compact('postsAll'));
+		$model = new Wpress_images_Posts();
+		
+		$postsAll = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->orderBy('wpBlog_created_at', 'desc')->paginate(5);/*->get()*/; //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
+        return view('crud_simple.index')->with(compact('postsAll', 'model'));
     }
 }

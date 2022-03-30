@@ -1,0 +1,26 @@
+ /*---------------------------  */
+
+ /*--Color each second div  odd/even*/
+.one-row:nth-child(odd) {
+  background-color: #F0F8FF;
+}
+
+.one-row:hover{
+	background:yellow;
+    /* animate smoothly */
+	transition: 1.25s;
+   -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+.my-head{background: #00FFFF; }
+
+ /*--images in main gii panel*/
+.image-main-gii {width: 26%;}
+
+.over-scroll{overflow-x: scroll; width:2000px;}
+
+ /* Mobile */
+ @media screen and (max-width: 480px) { 
+     .image-main-gii {width: 6%;}
+ }

@@ -55,10 +55,12 @@
                         <button class="btn btn-large btn-success">Go home</button>
                     </a></p>
                     
-                    <p><a onclick="alert('Not implemented yet');" href="#">
-                        <button class="btn btn-large btn-info">Save & Output new XML from Excel (N/A)</button>
+                    <p><a href="{{ route('crud-simple') }}">
+                        <button class="btn btn-large btn-danger">Go to Crud Gii</button>
                     </a></p>
-				    read Excel files with SimpleXLSX Lib
+					
+				    <p>One blog article can have one or more images are lightboxed.</p>
+					<p>This Wpress Image Blog uses it's own 3-table DB</p>
 				
 				    <!--  -->
 					<div class="col-sm-12 col-xs-12"></br>

@@ -19,6 +19,9 @@
   
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	
 	<!-- Bootsrap -->
 	<!-- Latest compiled and minified CSS -->
@@ -32,6 +35,9 @@
 	
 	<!-- Fa Library -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>           <!-- LightBox Lib JS  -->
+    <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> <!-- LightBox Lib CSS -->
 	
 </head>
 <body>
