@@ -1,8 +1,15 @@
 
 ### Readme
-> Implementation of Gii Crud Admin Panle
+> Implementation of Gii Crud Admin Panle (crud admin panelsimple and Vue admin crud panel (in plans))
 - <p> Contains simple CRUD panel and Vue Crud panel.</p>
 - <p> This Wpress Image Blog uses it's own 3-table DB.</p>
+
+
+## Screenshots
+
+![Screenshot](public/images/Screenshots/1.png)
+
+
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 

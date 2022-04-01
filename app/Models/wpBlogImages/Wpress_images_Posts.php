@@ -15,9 +15,9 @@ class Wpress_images_Posts extends Model
      *
      * @var string
      */
-    protected $table = 'wpress_images_blog_post';
-    protected $fillable = ['wpBlog_author', 'wpBlog_title', 'wpBlog_text', 'wpBlog_category', 'wpBlog_created_at'];  //????? protected $fillable = ['wpBlog_author', 'wpBlog_text', 'wpBlog_author', 'wpBlog_category',  'updated_at', 'created_at'];
-    public $timestamps = false; //to override Error "Unknown Column 'updated_at'" that fires when saving new entry
+    protected $table      = 'wpress_images_blog_post';
+    protected $fillable   = ['wpBlog_author', 'wpBlog_title', 'wpBlog_text', 'wpBlog_category', 'wpBlog_created_at'];  //????? protected $fillable = ['wpBlog_author', 'wpBlog_text', 'wpBlog_author', 'wpBlog_category',  'updated_at', 'created_at'];
+    public $timestamps    = false; //to override Error "Unknown Column 'updated_at'" that fires when saving new entry
     protected $primaryKey = 'wpBlog_id'; //to show Laravel what id column is 'wpBlog_id' not 'id'        // override in model autoincrement id column name
 
   
@@ -67,16 +67,16 @@ class Wpress_images_Posts extends Model
  
   
    /**
-    * Manula emulation of Laravel getter, gets DB Enum values (0/1) and changed to text "Published/Not Published"
+    * Manual emulation of Laravel getter, gets DB Enum values (0/1) and changed to text "Published/Not Published"
     *
     * @param  string  $value
     * @return string
     */
    public function getIfPublished($value){
        if($value == '1'){
-		return 'Published';
+		return '<span class="text-success small"> published </span>';
 	} else {
-		return 'Not Published';
+		return '<span class="text-danger small"> not published </span>';
 	}
    }
    
@@ -96,5 +96,50 @@ class Wpress_images_Posts extends Model
 	}
 	
  
+     
+    /**
+    * saves form inputs to DB (FINAL)
+    *
+    * @param array $data, contains all form input 
+	* @param array $imagesData, contains all form images
+    * @return 
+    */
+	public function saveFields($data, $imagesData){
+		
+		//dd(gettype ($data));
+		//dd($imagesData);
+		
+		$this->wpBlog_author     = auth()->user()->id;
+        $this->wpBlog_text       = $data['description'];
+        $this->wpBlog_title      = $data['title'];
+		$this->wpBlog_category   = $data['category_sel'];
+		$this->wpBlog_created_at = date('Y-m-d H:i:s');
+		$this->save();
+		$idX = $this->wpBlog_id; //$this->id;
+		//var_dump($idX); return false;
+		
+		if($this->save()){
+		     //saving images
+		    foreach ($imagesData as $fileImageX){
+			
+			    //getting Image info for Flash Message
+		        $imageName = time(). '_' . $fileImageX->getClientOriginalName();
+		        $sizeInByte =     $fileImageX->getSize() . ' byte';
+		        $sizeInKiloByte = round( ($fileImageX->getSize() / 1024), 2 ). ' kilobyte'; //round 10.55364364 to 10.5
+		        $fileExtens =     $fileImageX->getClientOriginalExtension();
+		        //getting Image info for Flash Message
+		
+		
+		        //Move uploaded image to the specified folder 
+		        $fileImageX->move(public_path('images/wpressImages'), $imageName);
+				//saving images
+		        $model = new Wpress_ImagesStock();
+			    $model->wpImStock_name    = $imageName; //image
+			    $model->wpImStock_postID  = $idX; // just saved article ID
+				$model->save();
+			
+		    }
+		}
+	}
 	
 }

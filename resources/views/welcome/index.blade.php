@@ -59,9 +59,12 @@
                         <button class="btn btn-large btn-danger">Go to Crud Gii</button>
                     </a></p>
 					
-				    <p>One blog article can have one or more images are lightboxed.</p>
-					<p>This Wpress Image Blog uses it's own 3-table DB</p>
-				
+					<ul>
+				        <li>One blog article can have one or more images are lightboxed.</li>
+					    <li>This Wpress Image Blog uses it's own 3-table DB</li>
+						<li>Spatie Rbac</li>
+				    </ul>
+					
 				    <!--  -->
 					<div class="col-sm-12 col-xs-12"></br>
 					   

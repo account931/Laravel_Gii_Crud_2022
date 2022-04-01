@@ -39,6 +39,9 @@
 	<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>           <!-- LightBox Lib JS  -->
     <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> <!-- LightBox Lib CSS -->
 	
+	
+	
+	
 </head>
 <body>
     <div id="app">
@@ -103,5 +106,12 @@
             @yield('content')
         </main>
     </div>
+	
+	 <!-- To register JS file for specific view only (In layout template) -->
+    @if (in_array(Route::getFacadeRoot()->current()->uri(), ['createNewWpressImg', 'gii-edit-post/{id}'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
+        <script src="{{ asset('js/Crud_Simple/crud_simple.js') }}"></script>      <!-- Crud simpple JS JS  -->
+    @endif	
+	
+	
 </body>
 </html>

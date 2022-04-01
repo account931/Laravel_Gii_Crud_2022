@@ -45,7 +45,7 @@
                         <i class="fa fa-recycle" style="font-size:36px"></i>  
                         CRUD Simple <span class="small text-danger">*</span>
                     </h3> 
-					<p> Migrated BootStrap from v3 to v4 </p>
+					<p> BootStrap migrated from v3 to v4 </p>
                 </div>
 
 
@@ -53,9 +53,43 @@
 				    
 					<p><a href="{{ route('home') }}">
                         <button class="btn btn-large btn-success">Go home</button>
+						<!-- Button to create new record -->
+						&nbsp;<a href="{{ route('createNewWpressImg') }}"><button class="btn btn-large btn-info">Create new</button></a>
                     </a></p>
                     
                
+			        <!-- Display Categories Dropdown with Blade -->
+					<div class="col-sm-12 col-xs-12"></br>
+					    <div class="form-group">
+					        <select class="mdb-select md-form" id="dropdownnn">
+						        <option value={{ url("/crud-simple") }}  selected="selected">All articles</option>
+		                        @foreach ($categories as $a)
+								
+								    @php
+								    //gets to know what select <option> to make selected according to $_GET['']
+			                        if(isset($_GET['category']) && $_GET['category'] == $a->wpCategory_id){
+				                        $selectStatus = 'selected="selected"';
+			                         } else {
+					                     $selectStatus = '';
+								     }
+									 //$a->wpCategory_id
+								     @endphp
+					 
+								    <option value={{ url("/crud-simple?category=$a->wpCategory_id") }}  {{$selectStatus }} > {{ $a->wpCategory_name}} </option>
+					            @endforeach
+						    </select>
+					    </div>
+					</div>
+					<!-- END Display Categories Dropdown with Blade -->
+
+					
+                    <div class="alert alert-info borderX">
+					    Aricles found: <span class="badge badge-pill badge-primary padding"> {{ $countArticles->count() }} </span> <!-- Bootstrap 4 -->
+					</div>
+			   
+			   
+			   
+			   
 				    <!---------- CRUD GII PANEL ------------>
 					<div class="col-sm-12 col-xs-12 card"></br> <!-- .panel panel-default to .card. Migrating from BStrap v3 to v4 -->
 					    
@@ -88,7 +122,8 @@
 								
 								        <!-- Title -->
 						                <div class="col-sm-3 col-xs-2 card-header"> <!-- Migrating from BStrap v3 to v4: changed .panel-heading to .card-header. Migrating from BStrap v3 to v4 -->
-								            {{ $a->wpBlog_title }}
+								            {{ $a->wpBlog_title }} <br>
+											{!! $model->getIfPublished( $a->wpBlog_status ) !!} <!-- without escapping --> <!-- "published"/"not_published" based on column 'wpBlog_status'-->
 						                </div>
 								
 								        <!-- Text -->
@@ -134,12 +169,23 @@
 						                </div>
 										<!-- End Image (displays one 1st image, post can have many connected images) -->
 										
-								
-								        <div class="col-sm-3 col-xs-2 card-header"> 
-								            <button class="btn btn-success"> <i class="fa fa-pencil"></i>    </button> <!-- Edit  --> 
-									        <button class="btn btn-info">    <i class="fa fa-eye">   </i>    </button> <!-- View  -->  
+								       <!-- Action buttons -->
+								        <div class="col-sm-3 col-xs-2 card-header">
+										
+										    <!-- Edit btn  -->
+											<a href="{{route('gii-edit-post', ['id' => $a->wpBlog_id])}}"> 
+								                <button class="btn btn-success"> <i class="fa fa-pencil"></i> </button> 
+											</a>
+											
+											<!-- View btn  -->
+									        <a href="{{route('wpBlogImagesOne', ['id' => $a->wpBlog_id])}}">        
+											    <button class="btn btn-info"> <i class="fa fa-eye"> </i> </button>  
+                                            </a>
+											
+											<!-- Delete-->
 									        <button class="btn btn-danger">  <i class="fa fa-trash-o"></i>   </button> <!-- Delete-->  
 						            </div> 
+									<!-- End Action buttons -->
 								
 								</div>
 						        @endforeach

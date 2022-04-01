@@ -1,5 +1,10 @@
- /*---------------------------  */
+ /*------------ /*--------- WPRESS Blog Images    ---------------  */
 
+ 
+ 
+
+ 
+ /*======================  WPRESS Blog Images CRUD INDEX ==================*/
  /*--Color each second div  odd/even*/
 .one-row:nth-child(odd) {
   background-color: #F0F8FF;
@@ -18,9 +23,46 @@
  /*--images in main gii panel*/
 .image-main-gii {width: 26%;}
 
-.over-scroll{overflow-x: scroll; width:2000px;}
+.over-scroll{overflow-x: scroll; width:2000px;} /* not used ? */
+.padding {padding:0.6em;}
+.borderX {border: 0.5px solid grey; margin-bottom: 1em;}
+
+/* ---- Shadow CSS */
+.shadowX {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .3),
+            -23px 0 20px -23px rgba(0, 0, 0, .6),
+            23px 0 20px -23px rgba(0, 0, 0, .6),
+            inset 0 0 40px rgba(0, 0, 0, .1);
+			border-radius:15px;
+}
+
 
  /* Mobile */
  @media screen and (max-width: 480px) { 
      .image-main-gii {width: 6%;}
  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ /*=============================  WPRESS Blog, View One Blog Record   ======================= */
+.image-main  {width:15%; border: 1px solid black; margin-bottom:0.4em;}
+.image-others{width:8%;  border: 1px solid black;}
+
+/* Wpress span text */
+.smallX{
+	font-size:0.7em; margin-top:-0.8em;
+}
+.img-wpblog{width: 8%;}
+.white{color:white;}
+
+
+
+ /*=============================  WPRESS Blog, CREATE   ======================= */
+
+.preview-x {width:15%; margin:0.6em 1em;}
