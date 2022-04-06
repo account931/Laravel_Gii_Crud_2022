@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule; //for in: validation
 use App\models\wpBlogImages\Wpress_images_Category; //model for DB table {wpressimage_category} for Range in: validation
 
-class UpdateRecordWpressImagesRequest extends FormRequest
+class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpressImagesRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -48,7 +48,8 @@ class UpdateRecordWpressImagesRequest extends FormRequest
 			//image validation https://hdtuto.com/article/laravel-57-image-upload-with-validation-example
 			//'filename' => ['required', /*'image',*/ 'mimes:jpeg,png,jpg,gif,svg', 'max:2048' ], // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',,
 		    
-			'filename' => 'required', //'required|array', 
+			//image file is required is only if checkbox 'remember' is unticked
+			'filename'   => 'required_without:remember|array', //'required|array',  //'required_without:remember'
             'filename.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' //min:2048
 		];
 
@@ -69,16 +70,17 @@ class UpdateRecordWpressImagesRequest extends FormRequest
 		
         // use trans instead on Lang 
         return [
-           //'username.required'  => Lang::get('userpasschange.usernamerequired'),
-		   'title.required'       => 'Kindly asking for a title',
-	       'description.required' => 'We need u to specify the article text',
-		   'description.min'      => 'We kindly require more than 5 letters for article text',
-		   'category_sel.in'      => 'Category has invalid value range', //range validation
-		   'filename.required'    => 'Image is very much required',
-		   'filename.*.image'     => 'Make sure it is an image',
-		   'filename.*.mimes'     => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
-		   'filename.max'      => 'Sorry! Maximum allowed size for an image is 2MB',
-		   //'filename.min'      => 'Your image is too small',
+           //'username.required'         => Lang::get('userpasschange.usernamerequired'),
+		   'title.required'              => 'Kindly asking for a title',
+	       'description.required'        => 'We need u to specify the article text',
+		   'description.min'             => 'We kindly require more than 5 letters for article text',
+		   'category_sel.in'             => 'Category has invalid value range', //range validation
+		   //'filename.required'         => 'Image is very much required', 
+		   'filename.required_without:remember'   => 'Image is very much required unless you tick selectbox', 
+		   'filename.*.image'            => 'Make sure it is an image',
+		   'filename.*.mimes'            => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
+		   'filename.max'                => 'Sorry! Maximum allowed size for an image is 2MB',
+		   //'filename.min'              => 'Your image is too small',
 		];
 	}
 	 

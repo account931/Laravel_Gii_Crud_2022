@@ -39,15 +39,32 @@
                 
 						
 						
-						
+				<!--------------- Header ---------------------->		
                 <div class="card-header"> <!-- .panel-heading to .card-header. Migrating from BStrap v3 to v4 -->
-                    <h3>
-                        <i class="fa fa-recycle" style="font-size:36px"></i>  
-                        CRUD Simple <span class="small text-danger">*</span>
-                    </h3> 
-					<p> BootStrap migrated from v3 to v4 </p>
+                    <div class="row">
+					
+					    <div class="col-sm-6 col-xs-6">
+					        <h3>
+                                <i class="fa fa-recycle" style="font-size:36px"></i>  
+                                CRUD Simple <span class="small text-danger">*</span>
+                            </h3> 
+					       <p> BootStrap migrated from v3 to v4 </p>
+					    </div>
+					
+					    <!-- Spatie blade directive -->
+					    <div class="col-sm-3 col-xs-6">
+					        @can(['edit articles', 'delete articles'])
+                                <p class="text-danger alert alert-danger">Spatie dynamically Verified </p>
+                            @endcan
+					    </div>
+					    <!-- End Spatie blade directive -->
+					
+					</div>
                 </div>
+                <!-------------- End Header ----------------------->	
 
+
+				
 
                 <div class="card-body">  <!--.panel-body to .card-body. Migrating from BStrap v3 to v4 -->
 				    
@@ -169,21 +186,28 @@
 						                </div>
 										<!-- End Image (displays one 1st image, post can have many connected images) -->
 										
+										
+										
 								       <!-- Action buttons -->
 								        <div class="col-sm-3 col-xs-2 card-header">
-										
-										    <!-- Edit btn  -->
-											<a href="{{route('gii-edit-post', ['id' => $a->wpBlog_id])}}"> 
-								                <button class="btn btn-success"> <i class="fa fa-pencil"></i> </button> 
-											</a>
-											
+																					
 											<!-- View btn  -->
 									        <a href="{{route('wpBlogImagesOne', ['id' => $a->wpBlog_id])}}">        
 											    <button class="btn btn-info"> <i class="fa fa-eye"> </i> </button>  
                                             </a>
 											
-											<!-- Delete-->
-									        <button class="btn btn-danger">  <i class="fa fa-trash-o"></i>   </button> <!-- Delete-->  
+											 <!-- Edit btn  -->
+											<a href="{{route('gii-edit-post', ['id' => $a->wpBlog_id])}}"> 
+								                <button class="btn btn-success"> <i class="fa fa-pencil" onclick="return confirm('Are you sure to edit?')"></i> </button> 
+											</a>
+											
+											<!-- Delete btn. Partial -->
+											@include('crud_simple.partial.delete_form', ['id_passed' => $a->wpBlog_id])  
+											<!--<a href="{{route('gii-delete-post' )}}">
+									            <button class="btn btn-danger" onclick="return confirm('Are you sure to delete?')">  <i class="fa fa-trash-o"></i>   </button> 
+                                            </a>-->
+                                            <!-- End Delete btn. Partial -->
+											
 						            </div> 
 									<!-- End Action buttons -->
 								

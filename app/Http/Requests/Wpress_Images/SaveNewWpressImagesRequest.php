@@ -48,7 +48,7 @@ class SaveNewWpressImagesRequest extends FormRequest
 			//image validation https://hdtuto.com/article/laravel-57-image-upload-with-validation-example
 			//'filename' => ['required', /*'image',*/ 'mimes:jpeg,png,jpg,gif,svg', 'max:2048' ], // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',,
 		    
-			'filename' => 'required', //'required|array', 
+			'filename'   => 'required|array', //'required|array', 
             'filename.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' //min:2048
 		];
 
@@ -77,7 +77,7 @@ class SaveNewWpressImagesRequest extends FormRequest
 		   'filename.required'    => 'Image is very much required',
 		   'filename.*.image'     => 'Make sure it is an image',
 		   'filename.*.mimes'     => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
-		   'filename.max'      => 'Sorry! Maximum allowed size for an image is 2MB',
+		   'filename.max'         => 'Sorry! Maximum allowed size for an image is 2MB',
 		   //'filename.min'      => 'Your image is too small',
 		];
 	}

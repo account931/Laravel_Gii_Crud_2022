@@ -101,11 +101,20 @@ $(document).ready(function(){
     // **************************************************************************************
     //                                                                                     **  
 	$(document).on("click", '.image-to-remove-from-db', function(event) {   // this click is used to react to newly generated cicles;
-	
-	    let clickedID = this.id; //alert(clickedID);
-	    let prevValue    = document.getElementById('array_with_images_to_delete').value;
-		let updatedValue = prevValue + ", " + clickedID;
-		document.getElementById("array_with_images_to_delete").value = updatedValue;
+	    let updatedValue = ""; // string to contains id to delete, i.e [5, 7],
+	    let clickedID    = this.id; //clicked ID;
+		
+	    let prevValue    = document.getElementById('array_with_images_to_delete').value; //gets hidden <input> value
+		
+		if(prevValue == ""){ //if it 1st image to add to array
+			updatedValue+= clickedID;
+			
+		} else {   //if it not 1st image to add to array, i.e 2, 3, etc
+			updatedValue+= prevValue + ", " + clickedID;
+		
+		}
+		
+		document.getElementById("array_with_images_to_delete").value = updatedValue; //sets updated string with images to delete to hidden <input>
 		$(this).parent().fadeOut(800); //hide deleted image
 	    
 	});

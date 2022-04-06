@@ -143,11 +143,18 @@
 						
 						<!-- Blog info: category, author, status-->
 						<hr class="hrX">
-						<p class='smallX font-italic'> <i class="fa fa-address-card-o"></i> Author:   {{ $articleOne[0]->authorName->name  }}   {{-- $a->authorName['name']   --}}</p> <!-- hasOne relations to show author name --> <!--  " $a->wpBlog_author" returns id, "authorName()" is a model hasOne function    }}</p> --> 
+						
+						<!-- Author with check -->
+						<p class='smallX font-italic'> <i class="fa fa-address-card-o"></i> Author: 
+						@isset($articleOne[0]->authorName->name)
+						     {{ $articleOne[0]->authorName->name  }}   {{-- $a->authorName['name']   --}}</p> <!-- hasOne relations to show author name --> <!--  " $a->wpBlog_author" returns id, "authorName()" is a model hasOne function    }}</p> --> 
+						@else
+							No author found
+						@endisset
 						
 						<p class='smallX font-italic'> <i class="fa fa-archive"></i>        Category: {{ $articleOne[0]->categoryNames->wpCategory_name }}</p> <!-- hasMany relations to show category name, "$a->wpBlog_category" returns id of category, "categoryNames" is a model hasMany function  -->
 						 
-						<p class='smallX'>             <i class="fa fa-bank"></i>           Status:   {{ $articleOne[0]->getIfPublished($articleOne[0]->wpBlog_status)    }}</p>   <!-- $a->wpBlog_status is DB value Enum (0/1) -->
+						<p class='smallX'>             <i class="fa fa-bank"></i>           Status:   {!! $articleOne[0]->getIfPublished($articleOne[0]->wpBlog_status)    !!} <!-- without escapping --></p>   <!-- $a->wpBlog_status is DB value Enum (0/1) -->
 						<p class='smallX'>Created:   {{ $articleOne[0]->wpBlog_created_at    }}</p>   <!-- Time -->
 
 						
@@ -161,11 +168,10 @@
 						        <!-- Form to delete the article (via $_POST)-->
 								<div class="row"> <!-- row-no-gutters remove the gutters from a row and its columns -->
 								<div class="col-sm-4 col-xs-6" style="text-align:right;">
-								    <form method="post" action="{{ url('/delete', $articleOne[0]->wpBlog_id )}}">
-								        {!! csrf_field() !!}
-									    <input type="hidden" value="{{ $articleOne[0]->wpBlog_id }}" name="id" />
-									    <button class="btn btn-danger" onclick="return confirm('Are you sure to delete?')" type="submit" class="">Delete via /POST <i class="fa fa-trash-o"></i> </button>
-								    </form>
+								    
+									<!-- Delete btn. Partial -->
+									@include('crud_simple.partial.delete_form', ['id_passed' => $articleOne[0]->wpBlog_id])
+									
 								</div>
                                 
 								<!-- Link to edit the article (via $_GET)-->

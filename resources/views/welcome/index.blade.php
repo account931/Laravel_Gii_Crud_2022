@@ -56,7 +56,11 @@
                     </a></p>
                     
                     <p><a href="{{ route('crud-simple') }}">
-                        <button class="btn btn-large btn-danger">Go to Crud Gii</button>
+                        <button class="btn btn-large btn-danger">Go to Simple Crud Gii</button>
+                    </a></p>
+					
+					<p><a href="{{ route('vue-crud-panel') }}">
+                        <button class="btn btn-large btn-info">&nbsp; Go to Vue Crud Gii &nbsp;</button>
                     </a></p>
 					
 					<ul>

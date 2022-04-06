@@ -57,7 +57,7 @@
             <div class="row">
 			    <?php $thisID = $articleOne[0]->wpBlog_id; ?>
 				
-                <form method="post" action='{{ url("/update-post" ) }}'>  <!-- not url("/update-post/$thisID" ) for PUT-->
+                <form method="post" action='{{ url("/update-post" ) }}' enctype="multipart/form-data">  <!-- not url("/update-post/$thisID" ) for PUT-->
 				{{-- Form::open(array('url' => 'storeNewWpress')) --}}
 				
 				   <!-- Note: Since HTML forms only support POST and GET, PUT and DELETE methods will be spoofed by automatically adding a _method hidden field to your form. -->
@@ -107,16 +107,29 @@
 									
 									    	
 				    <!-- Images upload -->
-				    <div class="form-group input-group control-group increment {{ $errors->has('filename') ? ' has-error' : '' }}" > <!-- .increment is crucial for  populating <input type="file">-->
-                        <input type="file" name="filename[]" class="form-control my-img-input-x" id="imgPrimary">
-                        <!--populate field input via JS -->
-						<div class="input-group-btn"> 
-                            <button class="btn btn-success btn-style btn-populate-x" type="button"><i class="glyphicon glyphicon-plus"></i>Add</button>
-                        </div>
+					<div class="form-group input-group control-group increment {{ $errors->has('filename') ? ' has-error' : '' }}" > <!-- .increment is crucial for  populating <input type="file">-->
+                        <input type="file" name="filename[]" class="form-control my-img-input-x" id="imgPrimary" />
+                            <div class="input-group-btn"> 
+                                <button class="btn btn-success btn-style btn-populate-x" type="button"><i class="glyphicon glyphicon-plus"></i>Add</button>
+                            </div>
                     </div>
 		            <!-- Images upload -->
 		
 		
+		
+		            <!-- Checkbox "Do not update image" --> 
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="checkbox">
+                            <label>
+                            <input type="checkbox" class="larger" name="remember" {{ old('remember') ? 'checked' : '' }}> <span class="ch-text"> New images not required </span>
+                            </label><hr>
+                        </div>
+                    </div>
+					<!-- Checkbox "Do not update image" --> 
+
+					
+					
+							
 		            <!-- Hidden Div with Image/file input to copy and generate on ++/-- -->
 					<!-- Hidden Div to populate <input type="file"> with JS (on click "+", adds a new <input> -->
 		            <div class="clone hide" style="display:none;">
@@ -129,16 +142,19 @@
                         </div>
                     </div>
 				    <!-- Hidden Div with Image/file input to copy and generate on ++/-- -->
-								
+						
+
+						
 								
 				    <!-- Shows Preview of an image before it is uploaded (when u select image in <input type="file">). Images are JQ appended -->
 					<div id="previewDiv">
 					</div>
-								 
+					<!-- End Shows Preview of an image before it is uploaded (when u select image in <input type="file">). Images are JQ appended -->			 
 									
 									
 									
-									
+											 
+			       		
 								
                                 
 								
@@ -150,40 +166,45 @@
 					
 		    <!------------------------------- END FORM ----------------------------------->
 
-					 
+
+			
+			
+			
+			
+						
 			<!-- hasMany Relation. Displays prev loaded images (from DB) with option to deelete(sets the hidden input with images ids). Images from table {wpressimage_imagesstock}. -->
 			<div class="col-sm-12 col-xs-12">
+			    <br>
 				<p> Connected images </p>
 				<?php $i = 0; ?>
 				{{-- Check if relation Does not exist --}}
 				@if( $articleOne[0]->getImages->isEmpty() )
-				    No connected images 
-					<!--<p><img class="image-main" src="{{URL::to("/")}}/images/no-image-found.png"  alt="a"/><p>-->
+				            No connected images 
+					        <!--<p><img class="image-main" src="{{URL::to("/")}}/images/no-image-found.png"  alt="a"/><p>-->
 						
-				{{-- Check if relation exists, if True, foreach it --}}
-				@else
+				            {{-- Check if relation exists, if True, foreach it --}}
+				        @else
                       							
-					@foreach ($articleOne[0]->getImages as $x) {{--hasMany must be inside second foreach--}}
-						{{-- If it is first image --}}
-					    {{-- @if($i > 0) --}}
+					        @foreach ($articleOne[0]->getImages as $x) {{--hasMany must be inside second foreach--}}
+						        {{-- If it is first image --}}
+					            {{-- @if($i > 0) --}}
 									
-						    <div class="col-sm-12 col-xs-12">
-								<!-- Image with LightBox -->
+						        <div class="col-sm-12 col-xs-12">
+								    <!-- Image with LightBox -->
 						            <a href="{{URL::to("/")}}/images/wpressImages/{{$x->wpImStock_name}}"  title="" data-lightbox="roadtrip{{$x->wpBlog_id}}"> <!-- roadtrip + currentID, to create a unique data-lightbox name, so in modal LightBox will show images related to this article only, not all -->
 								        <img class="image-others" src="{{URL::to("/")}}/images/wpressImages/{{$x->wpImStock_name}}"  alt="img"/>
 									</a>
 										
 								    <span class="alert alert-danger image-to-remove-from-db" id="{{$x->wpImStock_id}}"> Remove image ?? </span>
-							    <!-- End Image with LightBox -->
-							</div><br>
-						{{-- @endif --}}
+							        <!-- End Image with LightBox -->
+							    </div><br>
+						        {{-- @endif --}}
 		                   
-						<?php $i++; ?>
-	                @endforeach
-				@endif
-			</div>
-			<!-- End hasMany Relation. Displays all images. Images from table {wpressimage_imagesstock}. -->
-						
+						    <?php $i++; ?>
+	                       @endforeach
+				        @endif
+			        </div>
+			        <!-- End hasMany Relation. Displays all images. Images from table {wpressimage_imagesstock}. -->	
 					
 					
 					

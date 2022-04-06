@@ -52,7 +52,9 @@
  
  /*=============================  WPRESS Blog, View One Blog Record   ======================= */
 .image-main  {width:15%; border: 1px solid black; margin-bottom:0.4em;}
-.image-others{width:8%;  border: 1px solid black;}
+.image-others{width:8%;  border: 1px solid black; }
+.image-to-remove-from-db      { cursor:pointer; transition: 0.65s;}       /* button "Remove image" */
+.image-to-remove-from-db:hover{ color:red; background:yellow; transition: 1.25s;} /* button "Remove image" */
 
 /* Wpress span text */
 .smallX{

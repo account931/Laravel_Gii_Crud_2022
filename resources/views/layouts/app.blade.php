@@ -64,8 +64,9 @@
                     <ul class="navbar-nav ml-auto">
 					
 					    <!-- Common Links -->
-					    <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">           <a  class="nav-link" href="{{ route('welcome') }}">     Welcome  </a></li>
-						<li class="nav-item {{ Request::is('crud-simple*') ? 'active' : '' }}"> <a  class="nav-link" href="{{ route('crud-simple') }}"> CRUD     </a></li>
+					    <li class="nav-item {{ Request::is('/*') ? 'active' : '' }}">              <a  class="nav-link" href="{{ route('welcome') }}">        Welcome  </a></li>
+						<li class="nav-item {{ Request::is('crud-simple*') ? 'active' : '' }}">    <a  class="nav-link" href="{{ route('crud-simple') }}">    CRUD     </a></li>
+                        <li class="nav-item {{ Request::is('vue-crud-panel*') ? 'active' : '' }}"> <a  class="nav-link" href="{{ route('vue-crud-panel') }}"> Vue Crud </a></li>
 
 						
                         <!-- Authentication Links -->
@@ -111,6 +112,13 @@
     @if (in_array(Route::getFacadeRoot()->current()->uri(), ['createNewWpressImg', 'gii-edit-post/{id}'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
         <script src="{{ asset('js/Crud_Simple/crud_simple.js') }}"></script>      <!-- Crud simpple JS JS  -->
     @endif	
+	
+	
+	
+	 <!-- Vue js. To register JS file for specific view only (In layout template) -->
+    @if (in_array(Route::getFacadeRoot()->current()->uri(), ['vue-crud-panel'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
+        <script src="{{ asset('js/Vue_crud_panel/vue_crud_panel_start.js') }}"></script>      <!-- Crud simpple JS JS  -->
+    @endif
 	
 	
 </body>

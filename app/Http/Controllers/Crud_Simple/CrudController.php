@@ -12,7 +12,9 @@ use App\models\wpBlogImages\Wpress_ImagesStock;    //model for
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Wpress_Images\SaveNewWpressImagesRequest; //my custom Form validation via Request Class (to create new blog & images in tables {wpressimages_blog_post} & {wpressimage_imagesstock})
 use App\Http\Requests\Wpress_Images\UpdateRecordWpressImagesRequest; //my custom Form validation via Request Class (to editw blog & images in tables {wpressimages_blog_post} & {wpressimage_imagesstock})
-
+use Spatie\Permission\Models\Role;       //Spatie RBAC built-in model
+use Spatie\Permission\Models\Permission; //Spatie RBAC built-in model
+	
 class CrudController extends Controller
 {
     /**
@@ -72,7 +74,7 @@ class CrudController extends Controller
 	      throw new \App\Exceptions\myException('Article does not exist');
 	   }
 
-	   $articleOne = Wpress_images_Posts::where('wpBlog_id',$id)->get();
+	   $articleOne = Wpress_images_Posts::where('wpBlog_id',$id)->with('getImages', 'authorName', 'categoryNames')->get(); //dd($articleOne);
 	   
 	   return view('crud_simple.viewOne',  compact('articleOne'));
 	}
@@ -135,7 +137,7 @@ class CrudController extends Controller
 	    try{
 			$ticket = new Wpress_images_Posts();
 			$ticket->saveFields($data, $imagesData);
-			return redirect('/crud-simple')->with('flashMessageX', "Created successfully");
+			return redirect('/crud-simple')->with('flashMessageX', "Article was created successfully");
 			
 		} catch(Exception $e){
 			return redirect('/crud-simple')->with('flashMessageFailX', "Operation failed");
@@ -190,28 +192,29 @@ class CrudController extends Controller
      * @param UpdateRecordWpressImagesRequest $request
      * @return 
      */
-	public function updatePost(UpdateRecordWpressImagesRequest $request) { /* Request $request, $id */
+	public function updatePost(UpdateRecordWpressImagesRequest $request) { /* Request $request, $id */ 
       
-	   dd($_POST['blog_id_field']);
+	   //dd($request->all());
+	   //dd($_POST['blog_id_field']); //id to update
 	   //REWORK BELOW!!!
 	   
 	   
 	   
 	   //additional check in case user directly intentionally navigates to  ../blog_Laravel/public/delete/12 to not his record
 	   try{
-	       $articleOne = Wpress_images_Posts::where('wpBlog_id',$id)->firstOrFail(); //find the article by id  ->firstOrFail();
+	       $articleOne = Wpress_images_Posts::where('wpBlog_id', $_POST['blog_id_field'])->firstOrFail(); //find the article by id  ->firstOrFail();
 	   } catch (\Exception $e) {
 	   //if(!$articleOne){
 	      throw new \App\Exceptions\myException('Article does not exist');
 	   }
 	   
+	   /*
 	   if( !Auth::check() || $articleOne->wpBlog_author!= auth()->user()->id){
 		   throw new \App\Exceptions\myException('It is not your article to edit');
-	   }
+	   } */
 	   	//additional check in case user directly intentionally navigates to  ../blog_Laravel/public/delete/12 to not his record
 		
-		
-	   
+	   /*
 	   //validation rules
         $rules = [
 			'description' => 'required|string|min:3|max:255',
@@ -237,52 +240,27 @@ class CrudController extends Controller
 			catch(Exception $e){
 				return redirect()->back()->with('success',"Update failed");
 			}
+		}  */
+		
+		
+		$data       = $request->input();   //form inputs, except for <input type="file">, i.e images
+		$imagesData = $request->filename; //uploaded images
+		//dd($imagesData);
+		
+	    try{
+			$model = new Wpress_images_Posts();
+			$r = $model->updateFields($data, $imagesData, $articleOne, $request);
+			return redirect('/wpBlogImagesOne/' . $_POST['blog_id_field'] )->with('flashMessageX', "Updated successfully " . $r ); //<a href="{{route('gii-edit-post', ['id' => $a->wpBlog_id])}}">
+			
+		} catch(Exception $e){
+			return redirect()->back()->with('flashMessageFailX', "Update operation failed");
 		}
 
 	   
     }
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//BELOW IS NOT USED SO FAR!!!!!!!
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	/**
@@ -291,31 +269,31 @@ class CrudController extends Controller
      * @param  integer $id
      * @return 
      */
-	public function destroy(/*$id*/) {
+	public function deleteOneItem(/*$id*/) {
        /*DB::delete('delete from Wpress_images_Posts where wpBlog_id = ?',[$id]);
        echo "Record deleted successfully.";
        echo 'Click Here to go back.';
 	   */
 	   
-	   $id = $_POST['id'];
-	  
+	   $id = $_POST['blog_id_field'];
+	   //dd($id);
 	   
 	   //additional check in case user directly intentionally navigates to  ../blog_Laravel/public/delete/12 to not his record
 	   try{
-	       $articleOne = Wpress_images_Posts::where('wpBlog_id',$id)->firstOrFail(); //find the article by id  ->firstOrFail();
+	       $articleOne = Wpress_images_Posts::where('wpBlog_id', $id)->firstOrFail(); //find the article by id  ->firstOrFail();
 	   } catch (\Exception $e) {
 	   //if(!$articleOne){
 	      throw new \App\Exceptions\myException('Article does not exist');
 	   }
 	   
 	  
-	   
+	   /*
 	   if( !Auth::check() || $articleOne->wpBlog_author!= auth()->user()->id){
 		   throw new \App\Exceptions\myException('It is not your article');
-	   }
+	   } */
 	   
 	   Wpress_images_Posts::where('wpBlog_id',$id)->delete();
-	   return redirect('/wpBlogg')->with('flashMessage',"Record deleted successfully");
+	   return redirect('/crud-simple')->with('flashMessageX', "Record " . $id  . " was deleted successfully");
 
 	   
     }

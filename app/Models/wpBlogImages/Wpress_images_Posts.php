@@ -142,4 +142,143 @@ class Wpress_images_Posts extends Model
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	/**
+    * updates one record, updates form inputs to DB (FINAL)
+    *
+    * @param array $data, contains all form input, except for <input type="file">
+	* @param array $imagesData, contains all form images
+	* @param object $articleOne, an article to update
+    * @return 
+    */
+	public function updateFields($data, $imagesData, $articleOne, $request){
+		
+		$response = "";
+		//dd(gettype ($data));
+		//dd($imagesData);
+		//dd($request->all());
+		//dd($articleOne->wpBlog_author);
+		
+		$articleOne->wpBlog_author     = $articleOne->wpBlog_author;//auth()->user()->id;  //keep old value
+        $articleOne->wpBlog_text       = $data['description'];
+        $articleOne->wpBlog_title      = $data['title'];
+		$articleOne->wpBlog_category   = $data['category_sel'];
+		$articleOne->wpBlog_created_at = date('Y-m-d H:i:s');
+		//$articleOne->save();  //for update may use ->save() as well. Instead of Wpress_images_Posts::where('wpBlog_id', $id)->update([  'wpBlog_text' => $data['description'], 'wpBlog_title' => $data['title'], 'wpBlog_category' => $data['category_sel'] ]);
+
+		$idX = $articleOne->wpBlog_id; //$this->id;
+		//dd($idX); return false;
+		
+		if($articleOne->save()){
+			$response.= " Article was successfully edited. ";
+			
+			//upload new images, if user opted this
+			if($request->hasFile('filename')) { //if uploaded images 
+			    $response.= "User uploaded new images. ";
+				
+		        //saving images
+		        foreach ($imagesData as $fileImageX){
+			
+			        //getting Image info for Flash Message
+		            $imageName = time(). '_' . $fileImageX->getClientOriginalName();
+		            $sizeInByte =     $fileImageX->getSize() . ' byte';
+		            $sizeInKiloByte = round( ($fileImageX->getSize() / 1024), 2 ). ' kilobyte'; //round 10.55364364 to 10.5
+		            $fileExtens =     $fileImageX->getClientOriginalExtension();
+					$response.=  "Saved new image " . $imageName . " " . $sizeInKiloByte . " kb. "; 
+		            //getting Image info for Flash Message
+		
+		
+		            //Move uploaded image to the specified folder 
+		            $fileImageX->move(public_path('images/wpressImages'), $imageName);
+				    //saving images
+		            $model = new Wpress_ImagesStock();
+			        $model->wpImStock_name    = $imageName; //image
+			        $model->wpImStock_postID  = $idX; // just saved article ID
+				    $model->save();
+			
+		        }
+			
+		
+			} else {
+				$response.= "No new images were uploaded. ";
+			}
+			
+			//dd($response);
+			//return $response;
+			
+			
+			//delete old images if user opted to delete some
+			//......... work here
+			if($request->has('images_to_delete') && $request->images_to_delete != null) { //if request exists
+			    $response.= "User decided to delete some prev images. ";
+			    
+			    //.....
+				    /*
+				    $idN = $articleOne->wpBlog_author;
+				    $data = Wpress_images_Posts::with('getImages')->findOrFail($idN);
+					*/
+                    //$data = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->where('wpBlog_id', $idN)->orderBy('wpBlog_created_at', 'desc')->get(); //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
+
+                    /*
+                    //version for $db->get(), i.e returns array of objects
+                    $text = "";
+                    foreach($data as $b){
+                        if ($b->getImages->isEmpty()){
+                            $text.= 'Screw ';
+                        } else {
+                            foreach($b->getImages as $f){
+                                $text.= " Id to delete: " . $f->wpImStock_id . " ";
+                            }
+                
+                        }
+                    }
+                    */
+        
+                    $imgDelete = explode(",", $request->images_to_delete); //string to array, hidden input with images ids to delete
+					
+                    foreach($imgDelete as $f){
+                        $response.= "Image Id was deleted: " . $f . ". ";
+                
+				        $img = Wpress_ImagesStock::findOrFail($f);
+                
+                        //Delete relevant images from folder 'images/wpressImages/'
+                        if(file_exists(public_path('images/wpressImages/' .  $img->wpImStock_name))){
+		                    \Illuminate\Support\Facades\File::delete('images/wpressImages/' . $img->wpImStock_name);
+		                }
+                
+                        //Delete relevant images from DB table {Wpress_ImagesStock} (images connected to post blog)
+                        //$img = Wpress_ImagesStock::findOrFail($f); 
+                        $img->delete();
+                
+                    }
+                
+                    
+        
+                    //$data->delete(); //delete the Post itself from DB  {Wpress_images_Posts}       
+        
+        
+		   
+				//.....
+			   
+			   
+			   
+			   
+			   
+			}  else {
+				$response.= "No images were opted to delete. ";
+			}
+		
+			
+		} else {   
+		    /* saving failed */
+		}
+		return $response;
+		
+	}
+	
 }

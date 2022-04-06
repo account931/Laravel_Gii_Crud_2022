@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Spatie\Permission\Models\Role;       //Spatie RBAC built-in model
+use Spatie\Permission\Models\Permission; //Spatie RBAC built-in model
+use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +20,7 @@ class DatabaseSeeder extends Seeder
 		$this->call('wpress_image_category_Seeder');      //fill DB table { wpress_image_category'))} with data
 		$this->call('wpress_images_blog_post_Seeder');    //fill DB table  { wpress_images_blog_post} with data
         $this->call('WpressImages_ImagesStock_Seeder');   //fill DB table  { wpress_image_images_stocks} with data
-		 
+		$this->call('Spatie_Seeder');                     //assign Spatie permisssions, roles, fill DB tables {model_has_permissions, model_has_roles, role_has_permissions, role, permission} with data 
 		$this->command->info('Seeder action was successful!');
     }
 }
@@ -144,4 +147,49 @@ class WpressImages_ImagesStock_Seeder extends Seeder {
         } 
                 
     } 
+	
+}	
+	
+	
+	
+	
+	
+// Spatie permisssions Seeder==============================
+//assign Spatie permisssions, roles, fill DB tables {model_has_permissions, model_has_roles, role_has_permissions, role, permission} with data
+
+class Spatie_Seeder extends Seeder {
+    public function run()
+    {
+        $all_roles_in_database      = Role::all()->pluck('name');       //get all existsing roles (in DB Role)
+        $all_permission_in_database = Permission::all()->pluck('name'); //get all existsing permisssions (in DB)
+        
+        //My manual check if role "AdminX" already exists
+        $flag_role_exist = false;
+        
+        foreach($all_roles_in_database as $roleX){
+            if($roleX == "AdminX"){
+                //dd("AdminX already Exists");
+                $flag_role_exist = true;
+            }
+        }
+        
+        if($flag_role_exist == false){
+        
+            $role             = Role::create(['name' => 'AdminX']); //create role
+            $permissionEdit   = Permission::create(['name' => 'edit articles']); //create permisssion 'edit articles'
+            $permissionDelete = Permission::create(['name' => 'delete articles']); //create permisssion 'delete articles'
+            $role->givePermissionTo($permissionEdit); //assign permission to role 
+            $role->givePermissionTo($permissionDelete); //assign permission to role 
+            
+            //$userX = auth()->user(); //current user
+            $userX =  User::where('id', '=', 2)->first();
+            $userX->givePermissionTo($permissionEdit); //$user->givePermissionTo('edit articles'); //give the user certain permission
+            $userX->givePermissionTo($permissionDelete);
+            //dd($role . " is created ");
+        }
+    }
 }
+
+
+
+
