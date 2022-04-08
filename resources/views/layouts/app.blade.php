@@ -10,8 +10,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <script ="{{ asset('js/app.js') }}" defer></script>
+	 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -21,7 +21,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	
+	
 	
 	<!-- Bootsrap -->
 	<!-- Latest compiled and minified CSS -->
@@ -36,10 +38,13 @@
 	<!-- Fa Library -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
-	<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>           <!-- LightBox Lib JS  -->
-    <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> <!-- LightBox Lib CSS -->
+	<!--<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>  -->         <!-- LightBox Lib JS  -->
+    <!--<link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> --> <!-- LightBox Lib CSS -->
 	
 	
+	<!-- Mine Bootstrap -->
+	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
 	
 	
 </head>
@@ -108,9 +113,17 @@
         </main>
     </div>
 	
-	 <!-- To register JS file for specific view only (In layout template) -->
-    @if (in_array(Route::getFacadeRoot()->current()->uri(), ['createNewWpressImg', 'gii-edit-post/{id}'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
+	
+	<!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->                <!-- Mega Fix (collapsed main menu won't open)-->	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css"> <!-- Sweet Alert CSS -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js'></script>     <!-- Sweet Alert JS--> 
+	
+	
+	<!-- To register JS file for specific view only (In layout template) -->
+    @if (in_array(Route::getFacadeRoot()->current()->uri(), ['createNewWpressImg', 'gii-edit-post/{id}', 'wpBlogImagesOne/{id}'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
         <script src="{{ asset('js/Crud_Simple/crud_simple.js') }}"></script>      <!-- Crud simpple JS JS  -->
+		<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>         <!-- LightBox Lib JS  -->
+        <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet">
     @endif	
 	
 	

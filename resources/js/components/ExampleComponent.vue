@@ -7,6 +7,7 @@
 
                     <div class="card-body">
                         I'm an example component.
+						<button class="btn btn-danger" v-on:click="wtf"> Test </button>
                     </div>
                 </div>
             </div>
@@ -18,6 +19,13 @@
     export default {
         mounted() {
             console.log('Component mounted.')
-        }
+        },
+		
+		methods: {
+		    //function to switch CSS to show/hide HighLighted Errors text
+		    wtf: function () {
+		        alert('77');
+			}
+		},
     }
 </script>

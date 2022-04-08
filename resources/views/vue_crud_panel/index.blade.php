@@ -45,9 +45,10 @@
 					
 					    <div class="col-sm-6 col-xs-6">
 					        <h3>
-                                <i class="fa fa-recycle" style="font-size:36px"></i>  
+                                <i class="fa fa-snowflake-o" style="font-size:36px"></i> <i class="fa fa-unlock" style="font-size:36px"></i>  
                                 Vue Crud Panel <span class="small text-danger">*</span>
                             </h3> 
+						   <p> Passport Api access </p>
 					       <p> BootStrap migrated from v3 to v4 </p>
 					    </div>
 					
@@ -68,10 +69,27 @@
                 </div>
 				
 				
-                <div id="vueComponentR" class="card-body col-sm-12 col-xs-12">  <!--.panel-body to .card-body. Migrating from BStrap v3 to v4 -->
-                    f <show-quantity-of-posts></show-quantity-of-posts>
 				
-            </div>
+				
+				<!-- Vue component with quantity -->
+                <div id="coreDiv" class="card-body col-sm-12 col-xs-12">  <!--.panel-body to .card-body. Migrating from BStrap v3 to v4 -->
+					<show-quantity-of-posts-2/> 
+                    					
+					
+                </div>
+				<!-- Vue component with quantity -->
+				
+				
+				
+				
+				<!-- Vue route menu --> <!-- My Vue component with Menu Links -->
+			    <div  id="vue-menu" class="col-sm-12 col-xs-12"> <!--  id="vue-menu" --> 
+					<!-- <h3><b>Menu with Vue-Router</b></h3>  --> 
+					<vue-router-menu-with-link-content-display> </vue-router-menu-with-link-content-display>
+                    
+                </div>
+				
+					
         </div>
     </div>
 </div>
@@ -79,6 +97,11 @@
 
 
 						
-						
+
+<!--------- Loader (for ajax, hidden by default) ----------------->
+<div class="loader-x">
+    <img src="{{URL::to("/")}}/images/loader-black.gif"  alt="a"/>
+</div>
+<!--------- Loader (for ajax, hidden by default)  ----------------->						
 						
 @endsection

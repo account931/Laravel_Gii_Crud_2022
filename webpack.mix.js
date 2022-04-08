@@ -11,6 +11,6 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .js('resources/js/Vue_crud_panel/vue_crud_panel_start.js',   'public/js/Vue_crud_panel')  //Vue.js; Source-> Destination
+mix.js('resources/js/app.js',                                     'public/js')
+   .js('resources/js/Vue_crud_panel/vue_crud_panel_start.js',     'public/js/Vue_crud_panel')  //Vue.js; Source-> Destination
    .sass('resources/sass/app.scss', 'public/css');

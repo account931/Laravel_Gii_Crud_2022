@@ -1,10 +1,10 @@
- /*------------ /*--------- WPRESS Blog Images    ---------------  */
+ /*------------ /*--------- WPRESS Blog Images (Simple Crud)   ---------------  */
 
  
  
 
  
- /*======================  WPRESS Blog Images CRUD INDEX ==================*/
+ /*======================  WPRESS Blog Images CRUD INDEX (Simple Crud) ==================*/
  /*--Color each second div  odd/even*/
 .one-row:nth-child(odd) {
   background-color: #F0F8FF;
@@ -50,7 +50,7 @@
  
  
  
- /*=============================  WPRESS Blog, View One Blog Record   ======================= */
+ /*=============================  WPRESS Blog, View One Blog Record (Simple Crud)   ======================= */
 .image-main  {width:15%; border: 1px solid black; margin-bottom:0.4em;}
 .image-others{width:8%;  border: 1px solid black; }
 .image-to-remove-from-db      { cursor:pointer; transition: 0.65s;}       /* button "Remove image" */
@@ -65,6 +65,31 @@
 
 
 
- /*=============================  WPRESS Blog, CREATE   ======================= */
+ /*=============================  WPRESS Blog, CREATE (Simple Crud)  ======================= */
 
 .preview-x {width:15%; margin:0.6em 1em;}
+
+
+
+
+
+
+
+
+
+
+
+
+ /*=============================  Vue GII CRUD PANEL   ======================= */
+
+
+/* -- Loader */
+.loader-x  {position:absolute; top:16em; left:40em;width:99%; display:none;}
+.loader-x img {width:13%;}
+
+/* ---------------------------------------- Mobile */
+@media screen and (max-width: 480px) { 
+  .loader-x  {position:absolute; top:16em; left:8em; width:99%;}
+  .loader-x img {width:43%;}  
+}
+ 
