@@ -38,8 +38,8 @@
 	<!-- Fa Library -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
-	<!--<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>  -->         <!-- LightBox Lib JS  -->
-    <!--<link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> --> <!-- LightBox Lib CSS -->
+	<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>           <!-- LightBox Lib JS  -->
+    <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet"> <!-- LightBox Lib CSS -->
 	
 	
 	<!-- Mine Bootstrap -->
@@ -122,8 +122,6 @@
 	<!-- To register JS file for specific view only (In layout template) -->
     @if (in_array(Route::getFacadeRoot()->current()->uri(), ['createNewWpressImg', 'gii-edit-post/{id}', 'wpBlogImagesOne/{id}'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
         <script src="{{ asset('js/Crud_Simple/crud_simple.js') }}"></script>      <!-- Crud simpple JS JS  -->
-		<script src="{{ asset('js/LightBox/lightbox.js') }}"></script>         <!-- LightBox Lib JS  -->
-        <link  href="{{ asset('css/LightBox/lightbox.css') }}" rel="stylesheet">
     @endif	
 	
 	

@@ -14,7 +14,7 @@ export default new Vuex.Store({
 	    posts              : [], //posts: [{"wpBlog_id":1,"wpBlog_title":"Guadalupe Runolfsdottir", "wpBlog_text":"Store text 1", ,"wpBlog_category":4,"wpBlog_status":"1", "get_images":[{"wpImStock_id":16,"wpImStock_name":"product6.png","wpImStock_postID":1,"created_at":null,"updated_at":null}],"author_name":{"id":1,"name":"Admin","email":"admin@ukr.net","created_at":null,"updated_at":null},"category_names":{"wpCategory_id":4,"wpCategory_name":"Geeks","created_at":null,"updated_at":null}}, {"wpBlog_id":2,"wpBlog_title":"New", "wpBlog_text":"Store text 2"}],
         //api_tokenY       : localStorage.getItem('tokenZ') || '' , //api_token is passed from php in view as <vue-router-menu-with-link-content-display v-bind:current-user='{!! Auth::user()->toJson() !!}'>  and uplifted here to this store in VueRouterMenu in beforeMount() Section. Was true in prev project
         adm_posts_qunatity : 0, //quantity of posts found
-        loggedUser         : JSON.parse(localStorage.getItem('loggedStorageUser')) || {name: 'not set', email: 'errorMail'}, //logged user data (JS type:Object), set by Login ajax, {name: '', email: ''}  use {JSON.parse} to convert string to JS type: OBJECT
+        loggedUser         : JSON.parse(localStorage.getItem('loggedStorageUser_4279')) || {name: 'not set', email: 'errorMail'}, //logged user data (JS type:Object), set by Login ajax, {name: '', email: ''}  use {JSON.parse} to convert string to JS type: OBJECT
         passport_api_tokenY: localStorage.getItem('tokenZ') || null , // is set by ajax in /subcomponents/login.vue {thatX.$store.dispatch('changeVuexStoreLogged', data); and mutated here by { changeVuexStoreLogged({ commit }, dataTestX) } }
         //ifLogged           : this.getters.fruitsCount,//true,  //() =>ifTokenExists(), //state based on computed //false, //flag whether user logged or not (Passport changes here)
         test: 'mmmm',
@@ -126,8 +126,8 @@ export default new Vuex.Store({
             var thatX = this; //to fix context issue
 
 	        $('.loader-x').fadeIn(800); //show loader
-            alert('start (True) Disable 2nd alert in AllPosts beforeMount');
-            alert( "Vuex store Passport token " + state.passport_api_tokenY);
+            //alert('start (True) Disable 2nd alert in AllPosts beforeMount');
+            //alert( "Vuex store Passport token " + state.passport_api_tokenY);
             
             
             // Fetch method http variant (100% working)
@@ -159,7 +159,7 @@ export default new Vuex.Store({
                     //so far  can't fire store.dispatch('LogUserOut'), so do manually
                     alert('Vuex log out');
                     localStorage.removeItem('tokenZ'); //clear localStorage
-                    localStorage.removeItem('loggedStorageUser');
+                    localStorage.removeItem('loggedStorageUser_4279');
                     commit('LogOutMutation'); //reset state vars to store via mutation
                   
                 } else if(dataZ.error == false){
@@ -220,7 +220,7 @@ export default new Vuex.Store({
                     //so far  can't fire store.dispatch('LogUserOut'), so do manually
                     alert('Vuex log out');
                     localStorage.removeItem('tokenZ'); //clear localStorage
-                    localStorage.removeItem('loggedStorageUser');
+                    localStorage.removeItem('loggedStorageUser_4279');
                     commit('LogOutMutation'); //reset state vars to store via mutation
                   
                 } else if(dataZ.data.error == false){ 
@@ -253,7 +253,7 @@ export default new Vuex.Store({
                     //so far  can't fire store.dispatch('LogUserOut'), so do manually
                     alert('Vuex log out');
                     localStorage.removeItem('tokenZ'); //clear localStorage
-                    localStorage.removeItem('loggedStorageUser');
+                    localStorage.removeItem('loggedStorageUser_4279');
                     commit('LogOutMutation'); //reset state vars (state.passport_api_tokenY + state.loggedUser) via mutation
                     state.passport_api_tokenY = null;
            
@@ -316,7 +316,7 @@ export default new Vuex.Store({
         LogUserOut ({ commit }) { 
             alert('Vuex log out');
             localStorage.removeItem('tokenZ'); //clear localStorage
-            localStorage.removeItem('loggedStorageUser');
+            localStorage.removeItem('loggedStorageUser_4279');
             commit('LogOutMutation'); //reset state vars to store via mutation
             
         },
@@ -377,7 +377,7 @@ export default new Vuex.Store({
         setLoginResults (state, response) { 
             
             //sets user's array to Vuex store object(state.state.loggedUser). Is gotten from /subcomponents/login.vue ajax 
-            localStorage.setItem('loggedStorageUser', JSON.stringify(response.user)); //use {JSON.stringify} to save JS type:Object (i.e converts Object to string) //saves to localStorage to not reset data on every F5        
+            localStorage.setItem('loggedStorageUser_4279', JSON.stringify(response.user)); //use {JSON.stringify} to save JS type:Object (i.e converts Object to string) //saves to localStorage to not reset data on every F5        
             state.loggedUser = response.user;  //sets Vuex user Object (JS type:Object) {name: '', email: ''} 
 
 

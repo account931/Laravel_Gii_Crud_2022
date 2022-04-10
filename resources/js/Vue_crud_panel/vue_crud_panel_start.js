@@ -50,7 +50,7 @@ var $ = require( "jquery" );
 
  //Div with quantity
 const app = new Vue({
-	router, //must-have for Vue routing,
+	//router, //must-have for Vue routing,
     el: '#coreDiv',
 	store, //connect Vuex store, must-have
 });

@@ -7,7 +7,11 @@
         <p class="small">subcomponent/you_are_not_logged </p>
         <i class="fa fa-minus-circle" style="font-size:15px;color:red"></i> 
         <p>Sorry, you are not logged. Login first </p>
-        <p> <button class="btn-default my-btn"> <a href="login"> Click to go to Login page </a> </button> </p>
+        <p> 
+		    <button class="btn-default my-btn"> 
+		        <router-link class="nav-link" to="/login"> Click to go to Login page </router-link>   
+			</button> 
+		</p>
         </hr> 
         <i class="fa fa-globe" style="font-size:55px;"></i> 
     </h3>

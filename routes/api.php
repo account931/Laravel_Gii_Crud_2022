@@ -17,6 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Login and register via REST API + Passport
+Route::post('api_login',      'Auth_API\UserAuthController@login')->name('passport_login');
+Route::post('api_register',   'Auth_API\UserAuthController@register');
+
+
 
 //Following routes are protected ty Bearer token (to be sent in Headers) + 'myJsonForce' middleware
 //middleware' => ['sendTokenMy', 'checkX', 'auth:api'] // middleware' => 'auth', 'auth:api' //By default auth:api middleware requires each user to have a field in the database called api_token,

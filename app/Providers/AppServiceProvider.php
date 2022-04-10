@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
- use Illuminate\Support\Facades\Schema;  //to fix migration error (Specified key was too long; max key length is 767 bytes
- 
+use Illuminate\Support\Facades\Schema;  //to fix migration error (Specified key was too long; max key length is 767 bytes
+use Laravel\Passport\Passport; // Passport Api
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 		Schema::defaultStringLength(191); //to fix migration error (Specified key was too long; max key length is 767 bytes
+		Passport::routes(); // Passport Api
  
     }
 }

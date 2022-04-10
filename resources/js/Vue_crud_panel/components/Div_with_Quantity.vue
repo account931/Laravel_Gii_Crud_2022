@@ -1,6 +1,6 @@
 <template>
     <div class="col-sm-12 col-xs-12 alert alert-info borderX">
-		Aricles found(Vue): Zerooo-o  {{  this.$store.state.posts.length }}
+		Aricles found(Vue):  <span class="badge badge-danger" <b> {{  this.$store.state.posts.length }} </b> </span>
 		</br>
 		<button class="btn btn-danger" style="padding:0.7em 2em;" v-on:click="wtf"> Test </button>
 	</div>

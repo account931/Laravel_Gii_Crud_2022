@@ -12,18 +12,34 @@
         <div class=" fix-for-non-working-click-in-mobile"> <!-- .fix-for-non-working-click-in-mobile is a fix for non-working click in mobile -->
 
             <ul class="nav">
-					
+				
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/blog">Blog</router-link>
+                    <router-link class="nav-link" to="/start"> Start </router-link>
+                </li>
+				
+				
+                <li class="nav-item">
+                    <router-link class="nav-link" to="/blog">Blog(Gii)</router-link>
                 </li>
 						
 			    <li class="nav-item">
-                    <router-link class="nav-link" to="/edit"> Edit </router-link>
+                    <router-link class="nav-link" to="/edit"> Edit(Del) </router-link>
                 </li>
                 
-				 <li class="nav-item">
+				<li class="nav-item">
                     <router-link class="nav-link" to="/contact"> Contact </router-link>
                 </li>
+				
+				<li class="nav-item">
+                    <router-link class="nav-link" to="/login"> 
+                         {{ (this.$store.state.passport_api_tokenY == null) ? "Login" : "Dashboard"	 }}	
+					</router-link>
+                </li>
+				
+				<li class="nav-item"  v-if="this.$store.state.passport_api_tokenY == null"> <!-- Visible if Passport token not set -->
+                    <router-link class="nav-link" to="/register"> Register </router-link>
+                </li>
+				
 				
             </ul>
         </div>
