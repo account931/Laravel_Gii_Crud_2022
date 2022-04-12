@@ -6,11 +6,13 @@ Vue.use(Router);
 
 //import VueRouter from 'vue-router';
 
-import start  from '../components/pages/start';
-import blog     from '../components/pages/blog';
-import edit     from '../components/pages/edit';
-import view_one from '../components/pages/view-one';
-import contact  from '../components/pages/contact';
+import start      from '../components/pages/start';
+import blog       from '../components/pages/blog';
+import edit       from '../components/pages/edit';
+import view_one   from '../components/pages/view-one';
+import contact    from '../components/pages/contact';
+import create_new from '../components/pages/load-new';
+
 
 //Auth
 import login_page     from '../components/Wp_Login_Register_Rest/components/Login_component';
@@ -73,18 +75,25 @@ import blog from '../components/pages/blog';
     },
 	
 	
-	//login
+	//login (Rest Api by Passport)
     {
         path: '/login', 
         name: 'login', //same as in component return section
         component: login_page //component itself
     },
 	
-	//registration
+	//registration (Rest Api by Passport)
     {
         path: '/register', 
         name: 'register-page', //same as in component return section
         component: register_page //component itself
+    },
+	
+	
+	 {
+        path: '/create-new', 
+        name: 'create_new',   //same as in component return section
+        component: create_new //component itself
     },
 	
 

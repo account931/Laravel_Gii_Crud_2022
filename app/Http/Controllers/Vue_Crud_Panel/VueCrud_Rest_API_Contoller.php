@@ -102,6 +102,25 @@ class VueCrud_Rest_API_Contoller extends Controller
 	
 	
 	
+	
+		
+	/**
+     * REST API endpoint to /GET all DB table categories (to build <select> in loadnew.vue)
+     * Ajax Requst comes automatically onLoad (is in section {mounted ()}) from \resources\assets\js\WpBlog_Vue\components\pages\loadnew.vue
+     * @return json
+     */
+	public function getAllCategories() 
+    { 
+        $posts =  Wpress_images_Category::all();//gets categories for dropdown select
+        return response()->json(['error' => false, 'data' => $posts]);
+    }
+	
+	
+	
+	
+	
+	
+	
 	//NOT USED BELOW!!!!!!!
 	
 	
@@ -253,17 +272,6 @@ class VueCrud_Rest_API_Contoller extends Controller
 	
 	
 	
-	
-	/**
-     * REST API endpoint to /GET all DB table categories (to build <select> in loadnew.vue)
-     * Ajax Requst comes automatically onLoad (is in section {mounted ()}) from \resources\assets\js\WpBlog_Vue\components\pages\loadnew.vue
-     * @return json
-     */
-	public function getAllCategories() 
-    { 
-        $posts =  Wpress_images_Category::all();//gets categories for dropdown select
-        return response()->json(['error' => false, 'data' => $posts]);
-    }
-	
+
 	
 }

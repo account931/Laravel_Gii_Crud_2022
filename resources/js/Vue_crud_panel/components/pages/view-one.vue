@@ -38,89 +38,89 @@
 		            <div>
 		                <hr>
             
-                    <!-- Nav Link go back -->
-                    <p class="z-overlay-fix-2"> 
-                        <router-link class="nav-link" to="/blog">
-                            <button class="btn">Back to Vue Crud Panel <i class="fa fa-tag" style="font-size:14px"></i></button>
-                        </router-link>
-                    </p>
-                    <!-- End Nav Link go back -->
+                        <!-- Nav Link go back -->
+                        <p class="z-overlay-fix-2"> 
+                            <router-link class="nav-link" to="/blog">
+                                <button class="btn btn-info">Back to Vue Crud Panel <i class="fa fa-tag" style="font-size:14px"></i></button>
+                            </router-link>
+                        </p>
+                        <!-- End Nav Link go back -->
 		    
-                    <p> One product {{this.currentDetailID + 1 }} </p>
+                        <p> One product {{this.currentDetailID + 1 }} </p>
 					
 					
-					<!-- Id  -->     
-		            <p> <b><i class="fa fa-book"></i> Article id:         {{ this.$store.state.posts[this.currentDetailID].wpBlog_id }}  </b></p>
+					    <!-- Id  -->     
+		                <p> <b><i class="fa fa-book"></i> Article id:         {{ this.$store.state.posts[this.currentDetailID].wpBlog_id }}  </b></p>
              
-			        <!-- Title -->
-				    <p> <b> <i class="fa fa-calendar-check-o"></i> Title: {{ this.$store.state.posts[this.currentDetailID].wpBlog_title }} </b></p> <!-- title -->
+			            <!-- Title -->
+				        <p> <b> <i class="fa fa-calendar-check-o"></i> Title: {{ this.$store.state.posts[this.currentDetailID].wpBlog_title }} </b></p> <!-- title -->
 					
-                    <!-- Text -->					
 
-                        
+
 			
 			
-			
-                    <!-- Show the first image -->
-			        <!-- Simple image -->
-                    <p> 
+                        <!-- Show the first image -->
+			            <!-- Simple image -->
+                        <p> 
 					
-					    <!-- Image with LightBox -->
-						<div v-if="this.$store.state.posts[this.currentDetailID].get_images.length">
-						    <a :href="`images/wpressImages/${this.$store.state.posts[this.currentDetailID].get_images[0].wpImStock_name}`"  title="text" data-lightbox="roadtrip1"> <!-- roadtrip{{"this.currentDetailID}}" -->   <!-- roadtrip + currentID, to create a unique data-lightbox name, so in modal LightBox will show images related to this article only, not all -->
-			                    <img  :src="`images/wpressImages/${this.$store.state.posts[this.currentDetailID].get_images[0].wpImStock_name}`"  class="card-img-top image-main"> 
-			                </a>
-						</div>
+					        <!-- Image with LightBox -->
+						    <div v-if="this.$store.state.posts[this.currentDetailID].get_images.length">
+						        <a :href="`images/wpressImages/${this.$store.state.posts[this.currentDetailID].get_images[0].wpImStock_name}`"  title="text" :data-lightbox="`roadtrip${ this.$store.state.posts[this.currentDetailID].wpBlog_id }`">  <!-- roadtrip{{"this.currentDetailID}}" -->   <!-- roadtrip + currentID, to create a unique data-lightbox name, so in modal LightBox will show images related to this article only, not all -->
+			                        <img  :src="`images/wpressImages/${this.$store.state.posts[this.currentDetailID].get_images[0].wpImStock_name}`"  class="card-img-top image-main"> 
+			                    </a>
+						    </div>
 						
-						<!-- No image -->
-						<div v-else>
-			                <!-- If image does not exist (no image connected via hasOne relation).  ELSE -->
-                            <img class="card-img-top my-img-small" :src="`images/no-image-found.png`" />
-						</div>
-			        <p>
+						    <!-- No image -->
+						    <div v-else>
+			                    <!-- If image does not exist (no image connected via hasOne relation).  ELSE -->
+                                <img class="card-img-top my-img-small" :src="`images/no-image-found.png`" />
+						    </div>
+			            <p>
 
 					
 					
-					
-					
-					
-					
-					
+
 			
-                    <p> Text:     {{ this.$store.state.posts[this.currentDetailID].wpBlog_text }} </p>
+                        <p> Text:     {{ this.$store.state.posts[this.currentDetailID].wpBlog_text }} </p>
 					 
-					 
-                    <p> Author:   {{ (this.$store.state.posts[this.currentDetailID].author_name != null)  ? this.$store.state.posts[this.currentDetailID].author_name.name  : "No author" }} </p>
-                    <p> Email:    {{ (this.$store.state.posts[this.currentDetailID].author_name != null)  ? this.$store.state.posts[this.currentDetailID].author_name.email : "No email"}} </p>
+                        <p> Author:   {{ (this.$store.state.posts[this.currentDetailID].author_name != null)  ? this.$store.state.posts[this.currentDetailID].author_name.name  : "No author" }} </p>
+                        <p> Email:    {{ (this.$store.state.posts[this.currentDetailID].author_name != null)  ? this.$store.state.posts[this.currentDetailID].author_name.email : "No email"}} </p>
                     
-					<p class='smallX font-italic'> <i class="fa fa-archive"></i>     {{ this.$store.state.posts[this.currentDetailID].category_names.wpCategory_name }} </p>
+					    <p class='smallX font-italic'> <i class="fa fa-archive"></i>     {{ this.$store.state.posts[this.currentDetailID].category_names.wpCategory_name }} </p>
 					
-					<p class='smallX'> <i class="fa fa-bank"></i> <span v-html ="getIfPublished(this.$store.state.posts[this.currentDetailID].wpBlog_status)"></span> </p>
+					    <p class='smallX'> <i class="fa fa-bank"></i> <span v-html ="getIfPublished(this.$store.state.posts[this.currentDetailID].wpBlog_status)"></span> </p>
 					
-					<p class='smallX'>Created:   {{ this.$store.state.posts[this.currentDetailID].wpBlog_created_at    }}</p>   <!-- Time -->
+					    <p class='smallX'>Created:   {{ this.$store.state.posts[this.currentDetailID].wpBlog_created_at    }}</p>   <!-- Time -->
            
-                    <!-- Show all article images via FOR LOOP except for first. HasMany Relation -->
-                    <div class="col-md-12" v-for="(img, i) in this.$store.state.posts[this.currentDetailID].get_images" :key=i>
-                        <div v-if="i > 0">
-                            <img :src="`images/wpressImages/${img.wpImStock_name}`" class="image-others" alt="">
+		   
+		   
+                        <!-- Show all article images via FOR LOOP except for first. HasMany Relation -->
+                        <div class="col-md-12" v-for="(img, i) in this.$store.state.posts[this.currentDetailID].get_images" :key=i>
+                            <div v-if="i > 0">
+							
+							    <!-- Image with LightBox -->
+						        <a :href="`images/wpressImages/${img.wpImStock_name}}`"  title="text" :data-lightbox="`roadtrip${img.wpImStock_id}`">  <!-- roadtrip{{"this.currentDetailID}}" -->   <!-- roadtrip + currentID, to create a unique data-lightbox name, so in modal LightBox will show images related to this article only, not all -->
+			                        <img :src="`images/wpressImages/${img.wpImStock_name}}`"  class="card-img-top image-others"> 
+			                    </a>
+							
+                            </div>
                         </div>
+                        <!-- End Show all article images via FOR LOOP except for first. HasMany Relation -->
+          
+          
                     </div>
-          
-          
-          
-                </div>
-		        <!-- Show one product, based on URL ID -->
+		            <!-- Show one product, based on URL ID -->
 		
 		
 		
-		    </div><!-- else -->
+		        </div><!-- else -->
 		
 			
 			
 			
 			
-		</div>
-	</div>
+		    </div>
+	    </div>
 	<br><br>
 </div>
 	

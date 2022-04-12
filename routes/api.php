@@ -27,7 +27,9 @@ Route::post('api_register',   'Auth_API\UserAuthController@register');
 //middleware' => ['sendTokenMy', 'checkX', 'auth:api'] // middleware' => 'auth', 'auth:api' //By default auth:api middleware requires each user to have a field in the database called api_token,
 Route::group([/*'middleware' => ['auth:api', 'myJsonForce' ], */ 'prefix' => 'vue-crud'], function () { //url must contain /post/, i.e /post/get_all
 
-    Route::get ('get_all',   'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts') ->name('fetch_all');       //REST API to /GET all posts => api/post/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/post/get_all
+    Route::get ('get_all',        'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts')      ->name('fetch_all');       //REST API to /GET all posts => api/post/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/post/get_all
+    Route::get ('get_categories', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllCategories') ->name('get_categories');  //REST API to /GET all categories
+	
 });
 
 

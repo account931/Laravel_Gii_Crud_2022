@@ -27,6 +27,13 @@
 		    </div>
          
         
+		    <!-- button to create new record -->
+			<router-link class="nav-link" to="/create-new">  
+				<button class="btn btn-info">Create new </button> 
+			</router-link> 
+								
+								
+			
 		    <!-- If there is no blog records so far -----> <!-- amendment 30.03.2022 -->
 		    <div v-if="this.$store.state.posts.length == 0"> 
                 <hr>			
@@ -43,10 +50,10 @@
 			    <div class="col-sm-12 col-xs-12 row div-striped over-scroll">
 						
 				    <!-- Table headers -->
-				    <div class="col-sm-3 col-xs-2 d-none card-header my-head"> <b>Name   </b></div> <!-- Migrating from BStrap v3 to v4: changed "hidden-xs" to "d-none" -->
-				    <div class="col-sm-3 col-xs-2 d-none card-header my-head"> <b>Text   </b></div>
-				    <div class="col-sm-3 col-xs-2 d-none card-header my-head"> <b>Image  </b></div>
-				    <div class="col-sm-3 col-xs-2 d-none card-header my-head"> <b>Action </b></div>
+				    <div class="col-sm-3 col-xs-2  card-header my-head"> <b>Name   </b></div> <!-- Migrating from BStrap v3 to v4: changed "hidden-xs" to "d-none" -->
+				    <div class="col-sm-3 col-xs-2  card-header my-head"> <b>Text   </b></div>
+				    <div class="col-sm-3 col-xs-2  card-header my-head"> <b>Image  </b></div>
+				    <div class="col-sm-3 col-xs-2  card-header my-head"> <b>Action </b></div>
 							
         
                     <!-- Original part, Displays post articles from Vuex Store /store/index.js -->
@@ -89,20 +96,21 @@
 																					
 							    <!-- View btn  -->
 							    <button class="btn btn-info" @click="goToViewDetail(i)"> 
-								    <i class="fa fa-eye" style="font-size:0.7em" onclick="return confirm('Are you sure to vie?')"></i> 
+								    <i class="fa fa-eye" style="font-size:0.7em" onclick="return confirm('Are you sure to view?')"></i> 
 								</button>
 								
 											
 								<!-- Edit btn  -->
 								<button class="btn btn-success" @click="goToEditDetail(i)" >  
-									<i class="fa fa-pencil" style="font-size:1.9em" onclick="return confirm('Are you sure to edit?')"></i> 
+									<i class="fa fa-pencil" style="font-size:0.7em" onclick="return confirm('Are you sure to edit?')"></i> 
 								</button> 
 								
 											
 								<!-- Delete btn -->
-								<button class="btn btn-danger"> 
-								    <router-link class="nav-link" to="/edit"> <i class="fa fa-trash-o" onclick="return confirm('Are you sure to delete?')"></i>  </router-link> 
-								</button>
+								<router-link to="/edit">  <!-- removed class="nav-link" in order btn to be on the same line, like <span> not <p> -->
+								    <button class="btn btn-danger"><i class="fa fa-trash-o" style="font-size:0.7em" onclick="return confirm('Are you sure to delete?')"></i> </button> 
+								</router-link> 
+								
 								
                                 <!-- End Delete bt -->
 											

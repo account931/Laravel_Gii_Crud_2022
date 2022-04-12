@@ -35,7 +35,6 @@ class VueCrudController extends Controller
     public function index()
     {
 		
-		
         return view('vue_crud_panel.index'); //->with(compact('postsAll', 'model', 'countArticles', 'categories'));
     }
 	
