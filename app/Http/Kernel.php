@@ -62,7 +62,9 @@ class Kernel extends HttpKernel
         'signed'            => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'          => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'          => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-		'mySpatieRbacCheck' => \App\Http\Middleware\SpatieRbacMiddle::class, //Force Rbac check on api request
+		'mySpatieRbacCheck'        => \App\Http\Middleware\SpatieRbacMiddle::class, //Force Spatie Rbac check on usual web request (not REST API)
+		'mySpatieRbacCheckRestApi' => \App\Http\Middleware\SpatieRbacMiddleRestApiVersion::class, //Force Spatie Rbac check on Rest Api request (not usuanl we requests)
+		'myJsonForce'              => \App\Http\Middleware\MyForceJsonResponse::class, //Force json response on every api request
     ];
 
     /**

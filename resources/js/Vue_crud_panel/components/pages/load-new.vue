@@ -270,13 +270,13 @@ export default {
             //Use Formdata to bind inpts and images upload
             var that = this; //Explanation => if you use this.data, it is incorrect, because when 'this' reference the vue-app, you could use this.data, but here (ajax success callback function), this does not reference to vue-app, instead 'this' reference to whatever who called this function(ajax call)
             var formData = new FormData(); //new FormData(document.getElementById("myFormZZ"));
-            formData.append('title', this.title);
-            formData.append('body',  this.body);
-            formData.append('selectV', this.selectV);
+            formData.append('title',        this.title);
+            formData.append('description',  this.body);
+            formData.append('category_sel', this.selectV);
       
             var imagesUploaded = {};
             $.each(this.imageList, function (key, imageV) {
-                formData.append(`imagesZZZ[${key}]`, imageV);
+                formData.append(`imagesSet[${key}]`, imageV);
                 //imagesUploaded.push(`images[${key}]`, imageV);
                 //imagesUploaded.test = imageV;
             });
@@ -300,7 +300,7 @@ export default {
             }); 
       
 		    $.ajax({
-		        url: 'api/post/create_post_vue', 
+		        url: 'api/vue-crud/create_post_vue', 
                 type: 'POST', //POST is to create a new user
                 cache : false,
                 dataType    : 'json',
@@ -482,7 +482,7 @@ export default {
         |
         */
         validateForm () {
-            // no vaildation for images - it is needed
+            // no vaildation for images - it is needed (Done!!!)
             if (!this.title) {
                 this.status = false
                 this.showNotification('Post title cannot be empty')
@@ -501,6 +501,14 @@ export default {
                 return false;
             }
       
+	        //validation for images
+			 if (!this.imageList.length > 0) {
+                this.status = false;
+                this.showNotification('Image cannot be empty');
+                return false;
+            }
+			
+			
             this.showNotification(''); //clears error messages if any
             return true
         },

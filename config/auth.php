@@ -36,15 +36,19 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'api' => [
+        
+        //changed order (api first, wen second) to fix error "spatie/laravel-permission There is no permission named `edit_project` for guard `api`"
+        //see detailes in ReadMe_Laravel_Com_Commands for error fix => There is no permission named `edit_project` for guard `api`
+		'api' => [
             'driver'   => 'passport', //'token',
             'provider' => 'users',
             'hash' => false,
+        ],
+		
+		
+		'web' => [
+            'driver'   => 'session',
+            'provider' => 'users',
         ],
     ],
 

@@ -48,8 +48,8 @@ class SaveNewWpressImagesRequest extends FormRequest
 			//image validation https://hdtuto.com/article/laravel-57-image-upload-with-validation-example
 			//'filename' => ['required', /*'image',*/ 'mimes:jpeg,png,jpg,gif,svg', 'max:2048' ], // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',,
 		    
-			'filename'   => 'required|array', //'required|array', 
-            'filename.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' //min:2048
+			'imagesSet'   => 'required|array', //'required|array', 
+            'imagesSet.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' //min:2048
 		];
 
 		
@@ -74,10 +74,10 @@ class SaveNewWpressImagesRequest extends FormRequest
 	       'description.required' => 'We need u to specify the article text',
 		   'description.min'      => 'We kindly require more than 5 letters for article text',
 		   'category_sel.in'      => 'Category has invalid value range', //range validation
-		   'filename.required'    => 'Image is very much required',
-		   'filename.*.image'     => 'Make sure it is an image',
-		   'filename.*.mimes'     => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
-		   'filename.max'         => 'Sorry! Maximum allowed size for an image is 2MB',
+		   'imagesSet.required'    => 'Image is very much required',
+		   'imagesSet.*.image'     => 'Make sure it is an image',
+		   'imagesSet.*.mimes'     => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
+		   'imagesSet.max'         => 'Sorry! Maximum allowed size for an image is 2MB',
 		   //'filename.min'      => 'Your image is too small',
 		];
 	}
@@ -85,7 +85,7 @@ class SaveNewWpressImagesRequest extends FormRequest
 	 
 	 
     /**
-     * Return validation errors 
+     * Return validation errors. Not used for REST api ???
      *
      * @param Validator $validator
      */

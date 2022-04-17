@@ -25,10 +25,18 @@ Route::post('api_register',   'Auth_API\UserAuthController@register');
 
 //Following routes are protected ty Bearer token (to be sent in Headers) + 'myJsonForce' middleware
 //middleware' => ['sendTokenMy', 'checkX', 'auth:api'] // middleware' => 'auth', 'auth:api' //By default auth:api middleware requires each user to have a field in the database called api_token,
-Route::group([/*'middleware' => ['auth:api', 'myJsonForce' ], */ 'prefix' => 'vue-crud'], function () { //url must contain /post/, i.e /post/get_all
+Route::group(['middleware' => ['auth:api', 'myJsonForce', 'mySpatieRbacCheckRestApi'  ],  'prefix' => 'vue-crud'], function () { //url must contain /post/, i.e /post/get_all
 
-    Route::get ('get_all',        'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts')      ->name('fetch_all');       //REST API to /GET all posts => api/post/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/post/get_all
-    Route::get ('get_categories', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllCategories') ->name('get_categories');  //REST API to /GET all categories
+    Route::get ('get_all',         'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts')      ->name('fetch_all');       //REST API to /GET all posts => api/post/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/post/get_all
+    Route::post('create_post_vue', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@createPost')       ->name('create_post_vue'); //REST API to /POST (create) a new blog
+	Route::get ('get_categories',  'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllCategories') ->name('get_categories');  //REST API to /GET all categories
+	
+	/*
+	Route::group(['middleware' => ['mySpatieRbacCheckRestApi']], function () { 
+	        Route::post('create_post_vue', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@createPost')       ->name('create_post_vue'); //REST API to /POST (create) a new blog
+	}); */
+	
+	
 	
 });
 

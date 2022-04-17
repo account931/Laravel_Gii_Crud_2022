@@ -31,6 +31,11 @@
                 </li>
 				
 				<li class="nav-item">
+                    <router-link class="nav-link" to="/create-new"> Create-new </router-link>
+                </li>
+				
+				
+				<li class="nav-item">
                     <router-link class="nav-link" to="/login"> 
                          {{ (this.$store.state.passport_api_tokenY == null) ? "Login" : "Dashboard"	 }}	
 					</router-link>

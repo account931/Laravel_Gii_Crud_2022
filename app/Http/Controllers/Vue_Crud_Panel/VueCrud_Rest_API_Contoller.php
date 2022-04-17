@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\models\wpBlogImages\Wpress_images_Posts; //model for all posts
 use App\models\wpBlogImages\Wpress_images_Category; //model for all Wpress_images_Category
 use App\User; 
-use App\Http\Requests\SaveNewArticleRequest;
+use App\Http\Requests\Wpress_Images\SaveNewWpressImagesRequest;
 use App\Http\Controllers\Controller; //to use subfolder
 
 class VueCrud_Rest_API_Contoller extends Controller
@@ -117,29 +117,18 @@ class VueCrud_Rest_API_Contoller extends Controller
 	
 	
 	
+
 	
-	
-	
-	
-	//NOT USED BELOW!!!!!!!
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	/**
      * REST API to /POST (create) a new blog. 
      * Ajax Requst comes by button click from \resources\assets\js\WpBlog_Vue\components\pages\loadnew.vue
-     * @param SaveNewArticleRequest $request
+     * @param SaveNewWpressImagesRequest $request
      * @return json
      */
-	public function createPost(SaveNewArticleRequest $request) //Request Class //SaveNewArticleRequest
+	public function createPost(SaveNewWpressImagesRequest $request) //Request Class //SaveNewWpressImagesRequest
     {
         
         //var_dump($request->imagesZZZ[0]->getClientOriginalName(), true);  //$request->all()
@@ -185,9 +174,9 @@ class VueCrud_Rest_API_Contoller extends Controller
        
         //find User Id by his sent token. NB: was used (& 100% worked) in pre-Passport version {Laravel_Vue_Blog}, now reassigned to Passport
         //$userX = User::where('api_token', '=', $request->bearerToken())->first(); //$request->bearerToken() is an access token sent in headers in ajax
-        
-		$userX = Auth::user();  //getting the logged user Object, version for Passport
-		
+        //dd(\Auth::user()->id);
+		$userX = Auth::user();  //getting the logged user Object, version for Passport (won't work without in /routes/api.php => 'middleware' => ['auth:api', 'myJsonForce' ])
+		//dd($userX);
 		//return response()->json(['error' => false, 'data' => 'Too Good, but process back-end validation : ' . $request->title .  ' / ' .  $request->body . '/UserID:' . $userX->id  . '/' . $request->bearerToken()]);
 	    //return response()->json(['error' => false, 'data' => 'Too Good, but process back-end validation : ' . $request->bearerToken()]);
 
@@ -206,13 +195,13 @@ class VueCrud_Rest_API_Contoller extends Controller
         */
         
         $data       = array($request->title, $request->body, $request->selectV); //$request->all(); //$request->input();
-		$imagesData = $request->imagesZZZ; //uploaded images//$request->myImages
+		$imagesData = $request->imagesSet; //uploaded images//$request->myImages
 		
         //return response()->json(['error' => false, 'data' => 'Too Good, but process back-end validation : ' . $request->title .  ' / ' .  $request->body . '/UserID:' . $userX->id  . '/' . $request->bearerToken()]);
 
 	    try{
 			$ticket = new Wpress_images_Posts();
-			if($b = $ticket->saveFields($data, $imagesData, $userX->id)){ //$b = 'image1.jpg, image2.jpg'
+			if($b = $ticket->saveFieldsRestApi($data, $imagesData, $userX->id)){ //$b = 'image1.jpg, image2.jpg'
 			   return response()->json(['error' => false, 'data' => 'Post was saved successfully with connected images: ' . $b]);
             } else {
                 return response()->json(['error' => true, 'data' => 'Saving failed']);

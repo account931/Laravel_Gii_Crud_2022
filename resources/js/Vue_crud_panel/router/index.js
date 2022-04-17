@@ -96,6 +96,8 @@ import blog from '../components/pages/blog';
         component: create_new //component itself
     },
 	
+	
+	
 
   ]
 })

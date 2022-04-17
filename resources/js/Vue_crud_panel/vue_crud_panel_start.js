@@ -17,6 +17,11 @@ window.Vue = require('vue');
 import router from './router/index.js';
 import store from '../store/index'; //import Vuex Store
 
+//ElementUI Library
+import ElementUI from 'element-ui'; //import ElementUI pop-up modal window
+//import 'element-ui/lib/theme-chalk/index.css'; //moved as sepearate CSS Fileto css in /layout/app.php, otherwise UI icons loading fails
+Vue.use(ElementUI); //connect Vue to use with ElementUI
+
 //import Router from 'vue-router';
 //Vue.use(router); //connect Vue to use with VueRouter
 

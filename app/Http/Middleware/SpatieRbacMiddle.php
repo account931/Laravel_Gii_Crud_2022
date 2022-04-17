@@ -1,5 +1,6 @@
 <?php
-//Middleware for Rbac check via Spatie Laravel Permission. Checks if a User has certain permisssions. Used in routes/web.php
+//For Simple CRUD. Not for REST API PASSPORT
+//Middleware for Rbac check via Spatie Laravel Permission. Checks if a User has certain permisssions. Used in routes/web.php.
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;

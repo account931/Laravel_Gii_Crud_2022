@@ -129,6 +129,7 @@
 	 <!-- Vue js. To register JS file for specific view only (In layout template) -->
     @if (in_array(Route::getFacadeRoot()->current()->uri(), ['vue-crud-panel'])) <!--Route::getFacadeRoot()->current()->uri()  returns testRest--> 
         <script src="{{ asset('js/Vue_crud_panel/vue_crud_panel_start.js') }}"></script>      <!-- Crud simpple JS JS  -->
+		<link  href="{{ asset('css/Third_party_app_css/Element_UI/theme-chalk/index.css') }}" rel="stylesheet"> <!-- Elememt-UI icons (fix)  -->
     @endif
 	
 	
