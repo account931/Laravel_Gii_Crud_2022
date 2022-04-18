@@ -2,7 +2,7 @@
 //Version for REST API
 //Middleware for Rbac check via Spatie Laravel Permission. Checks if a User has certain permisssions.
 //see detailes in ReadMe_Laravel_Com_Commands for error fix => There is no permission named `edit_project` for guard `api`
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Vue_API_Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;

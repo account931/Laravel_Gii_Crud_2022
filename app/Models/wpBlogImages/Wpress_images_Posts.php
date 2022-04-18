@@ -1,5 +1,7 @@
 <?php
-//Model for wpress_images_blog_post
+//For regular web http
+//Used for Crud simple(Web) only 
+//Model for wpress_images_blog_post, 
 namespace App\models\wpBlogImages;
 
 use Illuminate\Database\Eloquent\Model;
@@ -96,6 +98,16 @@ class Wpress_images_Posts extends Model
 	}
 	
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ //**********************************************************************************************************************
+
+ //Simple Crud method sections(web) ============================================================
      
     /**
     * saves form inputs to DB (FINAL). Simple Crud
@@ -280,74 +292,7 @@ class Wpress_images_Posts extends Model
 		return $response;
 		
 	}
-	
-	
-	
-	
-	
-	
-//**********************************************************************************************************************
-	
-//REST API METHODS SECTION =====================================================
-	
-	
-	
-   /**
-    * saves form inputs to DB (FINAL)
-    *
-    * @param array $data, contains all form input 
-	* @param array $imagesData, contains all form images
-    * @param int $userZ
-    * @return string $imagesList
-    */
-	public function saveFieldsRestApi($data, $imagesData, $userZ)
-    {
-		
-		//dd(gettype ($data));
-		//dd($imagesData);
-		
-		$this->wpBlog_author     = $userZ; //auth()->user()->id;
-        $this->wpBlog_text       = $data[0]; //$data['description'];
-        $this->wpBlog_title      = $data[1]; //$data['title'];
-		$this->wpBlog_category   = $data[2];
-		$this->wpBlog_created_at = date('Y-m-d H:i:s');
-		$this->save();
-		$idX = $this->wpBlog_id; //id of a new saved post, db 'wpressimages_blog_post'
-		
-		if($this->save()){ 
-		    $imagesList = '';
-		    foreach ($imagesData as $fileImageX){
-			
-			    //getting Image info for Flash Message
-		        $imageName = time(). '_' . $fileImageX->getClientOriginalName();
-                $imagesList.=  $imageName . ' ,';
-		        //$sizeInByte =     $fileImageX->getSize() . ' byte';
-		        //$sizeInKiloByte = round( ($fileImageX->getSize() / 1024), 2 ). ' kilobyte'; //round 10.55364364 to 10.5
-		        //$fileExtens =     $fileImageX->getClientOriginalExtension();
-		        //getting Image info for Flash Message
-		
-		    
-		        //Move uploaded image to the specified folder 
-		        $fileImageX->move(public_path('images/wpressImages'), $imageName);
-                //$move = File::move($imageName, public_path('images/wpressImages'));
-				//saving images
-		        $model = new Wpress_ImagesStock();
-			    $model->wpImStock_name    = $imageName; //image
-			    $model->wpImStock_postID  = $idX; // just saved article ID
-				$model->save();
-			
-		    } 
-            return $imagesList; // true;
-		}
-	}
-    
-    
-	
-	
-	
-//End REST API SECTION =====================================================
-	
-	
+ //End Simple Crud method sections(web) ============================================================
 	
 	
 	

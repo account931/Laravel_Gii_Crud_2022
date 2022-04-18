@@ -1,18 +1,21 @@
 
 ### Readme
-> Implementation of Gii Crud Admin Panle (crud admin panelsimple and Vue admin crud panel (in plans))
-- <p> Contains simple CRUD panel and Vue Crud panel.</p>
-- <p> This Wpress Image Blog uses it's own 3-table DB.</p>
-
+> Implementation of Gii Crud Admin Panle (crud admin panel simple(web) and Vue admin crud panel(api))
+- <p> Contains simple CRUD panel(web) and Vue Crud panel.</p>
+- <p> This Wpress Image Blog(both web and api) uses it's own 3-table DB.</p>
+- <p> Both simple CRUD panel(web) and Vue Crud panel(api) use Spatie Rbac, web and api permission are different (see Spatie Db tables)</p>
+- <p> Vue Crud panel  uses Passport Api </p>
 
 ## Screenshots
 
+### Crud admin panel simple(web)
 ![Screenshot](public/images/Screenshots/1.png)
 ![Screenshot](public/images/Screenshots/2.png)
 ![Screenshot](public/images/Screenshots/3.png)
 ![Screenshot](public/images/Screenshots/4.png)
 ![Screenshot](public/images/Screenshots/5.png)
 
+### Vue admin crud panel(api)
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>

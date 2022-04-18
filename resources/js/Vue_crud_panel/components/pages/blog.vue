@@ -95,13 +95,13 @@
 						    <div class="col-sm-3 col-xs-2 card-header">
 																					
 							    <!-- View btn  -->
-							    <button class="btn btn-info" @click="goToViewDetail(i)"> 
+							    <button class="btn btn-info" @click="goToViewDetail(post.wpBlog_id -1 )"> 
 								    <i class="fa fa-eye" style="font-size:0.7em" onclick="return confirm('Are you sure to view?')"></i> 
 								</button>
 								
 											
 								<!-- Edit btn  -->
-								<button class="btn btn-success" @click="goToEditDetail(i)" >  
+								<button class="btn btn-success" @click="goToEditDetail(post.wpBlog_id -1 )" >  
 									<i class="fa fa-pencil" style="font-size:0.7em" onclick="return confirm('Are you sure to edit?')"></i> 
 								</button> 
 								

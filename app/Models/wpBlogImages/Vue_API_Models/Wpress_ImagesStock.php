@@ -1,6 +1,7 @@
 <?php
-//Model for {wpress_image_images_stocks}. For regular web http
-namespace App\models\wpBlogImages;
+//used for Vue_Crud panel (Api requests) only
+//Model for {wpress_image_images_stocks}
+namespace App\models\wpBlogImages\Vue_API_Models;
 
 use Illuminate\Database\Eloquent\Model;
 

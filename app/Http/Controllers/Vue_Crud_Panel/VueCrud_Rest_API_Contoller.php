@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Storage;
 use Illuminate\Support\Facades\DB;
-use App\models\wpBlogImages\Wpress_images_Posts; //model for all posts
-use App\models\wpBlogImages\Wpress_images_Category; //model for all Wpress_images_Category
+use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Posts; //model for all posts
+use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Category; //model for all Wpress_images_Category
 use App\User; 
-use App\Http\Requests\Wpress_Images\SaveNewWpressImagesRequest;
+use App\Http\Requests\Wpress_Images\Vue_API_Requests\SaveNewWpressImages_ApiRequest;
+use App\Http\Requests\Wpress_Images\Vue_API_Requests\UpdateRecordWpressImages_ApiRequest;
 use App\Http\Controllers\Controller; //to use subfolder
 
 class VueCrud_Rest_API_Contoller extends Controller
@@ -128,7 +129,7 @@ class VueCrud_Rest_API_Contoller extends Controller
      * @param SaveNewWpressImagesRequest $request
      * @return json
      */
-	public function createPost(SaveNewWpressImagesRequest $request) //Request Class //SaveNewWpressImagesRequest
+	public function createPost(SaveNewWpressImages_ApiRequest $request) //Request Class //SaveNewWpressImagesRequest
     {
         
         //var_dump($request->imagesZZZ[0]->getClientOriginalName(), true);  //$request->all()
@@ -194,7 +195,7 @@ class VueCrud_Rest_API_Contoller extends Controller
         return response()->json(['error' => false, 'data' => 'Too Good, back-end validation is OK. Imaged : ' . $requestText ]);
         */
         
-        $data       = array($request->title, $request->body, $request->selectV); //$request->all(); //$request->input();
+        $data       = array($request->title, $request->body, $request->category_sel); //$request->all(); //$request->input();
 		$imagesData = $request->imagesSet; //uploaded images//$request->myImages
 		
         //return response()->json(['error' => false, 'data' => 'Too Good, but process back-end validation : ' . $request->title .  ' / ' .  $request->body . '/UserID:' . $userX->id  . '/' . $request->bearerToken()]);
@@ -261,6 +262,112 @@ class VueCrud_Rest_API_Contoller extends Controller
 	
 	
 	
+	
+	
+	/**
+     * Admin REST API endpoint to /GET get one blog/item by ID. Used in edit/update Form.
+     * Ajax Requst comes from ........../resources/assets/js/WpBlog_Admin_Part/components/pages/editItem.vue. Triggered automatically in beforeMount()
+     * @return \Illuminate\Http\Response
+     */
+    public function getEditOneItem($idX)
+    {   
+	    if (!Wpress_images_Posts::where('wpBlog_id', $idX)->exists()) { 
+		    return response()->json(['error' => true, 'data'   => "Article does not exist"]);
+		}
+		
+        $posts = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->where('wpBlog_id', $idX)->orderBy('wpBlog_created_at', 'desc')->get(); // hasMany/belongTo Eager Loading
+		return response()->json(['error' => false, 'data' => $posts]);
+		
+    }
+	
+	
+	
+	
+	
+	
+	
+	 /**
+     * Admin REST API endpoint to Update/Edit one blog/item by ID, used via  /PUT . Triggered by Edit/Update Form "Submit" button.
+     * Ajax Requst comes from ........../resources/assets/js/WpBlog_Admin_Part/components/pages/editItem.vue. Triggered by clicking Form "Submit" button
+     * @param $idX, an id of edited post, set in URL(in editItem.vue) like this 'api/post/admin_get_one_blog/' + idZ 
+     * @param $request, example of request => [ "title" => "TTTTTTTTT", "body" => "JavaScript Tutorial", "selectV" => "3", "imageToDelete" => "66", "_method" => "PUT", "imagesZZZ" => array:1 [0 => UploadedFile {#1172, -originalName: "2254.png", -mimeType: "image/png", -size: 30871} ] 
+     * @return \Illuminate\Http\Response
+     */
+    public function AdminUpdateOneItem($idX, UpdateRecordWpressImages_ApiRequest $request)  //Request Class validation //Request $request
+    {   
+         //Due to overridded {function failedValidation(Validator $validator)} in RequestClass, we can proceed here, even if Validation fails
+        if (isset($request->validator) && $request->validator->fails()) {
+           //return response()->json($request->validator->messages(), 400);
+           return response()->json([
+               'error' => true, 
+               'data' => 'Was seem to be OK, but validation crashes', 
+               'validateErrors'=>  $request->validator->messages()]);
+        }
+        
+        
+        //Below is just for testing ------
+        /*
+        //Old images User clicked to delete (while editing)
+        $imageToDelete = ' User while updating requested to delete Images: '; 
+        
+        if ($request->has('imageToDelete')){
+            //convert string {$request->imageToDelete} to array
+            $del = explode(" ", $request->imageToDelete); // for bizzare reason {$request->imageToDelete) comes to Server as string not array 
+            foreach($del as $d){
+                $imageToDelete.= $d;    
+            }
+        } else {
+            $imageToDelete.= ' Zero old images ';
+        }
+        
+        //New images uploaded by User (while editing)
+        $imagesNew = ' User Uploaded new Images: '; 
+        
+        if (isset($request->imagesZZZ)){
+            foreach($request->imagesZZZ as $d){
+                $imagesNew.= " " . $d;    
+            }
+        } else {
+            $imagesNew.= ' Zero new images ';
+        }
+        
+        return response()->json([
+            'error' => false, 
+            'data' => 'Update is OK. Implement me further. Your ID ' . $idX . ' TITLE: ' . 
+                      $request->title . ' ' . $request->body . ' Category: ' . $request->selectV . ' ' .
+                      $imageToDelete . ' / ' .
+                      $imagesNew
+        ]);
+        */
+        //End Below is just for testing --------
+        
+        
+
+        
+        $model = new Wpress_images_Posts();
+        
+        //Updates one post/item in DB 'wpressimages_blog_post'
+        $updatePost  = $model ->updatePostItem($idX, $request);
+        
+        //Saves new images (if any) to DB Wpress_ImagesStock (new images that a user uploaded while updtaing/editing a post)
+        $uploadNewImg = $model ->updateNewImages($idX, $request);
+        
+        //Deletes old images (if any) to DB DB Wpress_ImagesStock (old images that a user wished to delete while updtaing/editing a post)
+        $deleteOldImg = $model ->deleteOldImages($idX, $request);
+        
+        
+        return response()->json([
+            'error' => false, 
+            'data' => 'Successfully updated. </br>' . 
+                    $updatePost   . ' </br> ' .  //Title: 'xxx', body: 'xxx', category: 'xxx'
+                    $uploadNewImg . ' </br> ' .  //'User Uploaded new Images' || 'User did not loaded new images'
+                    $deleteOldImg                //'While updating a user requested to delete Images' || 'User did not opted to delete any old images'
+        ]);
+        
+    }
+	
+    
+    
 
 	
 }

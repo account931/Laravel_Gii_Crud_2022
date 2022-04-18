@@ -1,18 +1,20 @@
 <?php
-//Used both for Crud simple only(Web) 
+//Used for Vue Crud Panel only (Api)
 //used to validate via Request Class (used to edit blog & images in tables {wpress_images_blog_post} & {wpress_image_images_stocks})
 //used in WpBlogImages /public function updatePost(UpdateRecordWpressImagesRequest $request)
 //Used for validation via Request Class, not via controller
 
-namespace App\Http\Requests\Wpress_Images;
+namespace App\Http\Requests\Wpress_Images\Vue_API_Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule; //for in: validation
-use App\models\wpBlogImages\Wpress_images_Category; //model for DB table {wpressimage_category} for Range in: validation
+use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Category; //model for DB table {wpressimage_category} for Range in: validation
 
-class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpressImagesRequest
+class UpdateRecordWpressImages_ApiRequest extends FormRequest   //UpdateRecordWpressImagesRequest
 {
+	public $validator = null; //must have to override Return validation errors. In this case it will return and exucute code in Controller, even if Request Validation fails
+	
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -84,6 +86,22 @@ class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpress
 		   //'filename.min'              => 'Your image is too small',
 		];
 	}
+	
+
+	
+    /**
+     * To override Return validation errors. In this case it will return and exucute code in Controller, even if Request Validation fails
+	 * must include in Class code: public $validator = null;
+     * @param Validator $validator
+     * 
+    */
+    
+    protected function failedValidation(Validator $validator)
+    {
+        $this->validator = $validator;
+        //return response()->json(['error' => true, 'errors' => $validator->errors()->all()]);
+    }
+     
 	 
 	 
 	 
@@ -92,13 +110,13 @@ class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpress
      *
      * @param Validator $validator
      */
+	/*
     public function withValidator(Validator $validator)
     {
-	
 	    if ($validator->fails()) {
             return redirect('/createNewWpressImg')->withInput()->with('flashMessageFailX', 'Validation Failed!!!' )->withErrors($validator);
         }
-	}
+	} */
 	 
 	
 

@@ -236,6 +236,11 @@ export default new Vuex.Store({
                     swal("Done", "Articles are loaded (axios) (Vuex store).", "success");
 	                return commit('setPosts', dataZ.data ); //sets ajax results to store via mutation
                 }
+				
+				if (dataZ.data.error == true){  //If predefined error fires
+                    swal("Stopped", dataZ.data.data, "error");
+	                return false
+                }
             })
 	        .catch(function(err){ 
                 $('.loader-x').fadeOut(800);  //hide loader
@@ -356,7 +361,7 @@ export default new Vuex.Store({
         setPosts(state, response) {  
             console.log('Set posts mutation successfully');
             state.posts = response.data/*.data*/;
-	        console.log('setPosts executed in store ' + response.data[0]['wpBlog_title'] + " state=> " + state.posts[0]['wpBlog_title'] );
+	        console.log('setPosts executed in store ' + response.data[0]['wpBlog_title'] + " state=> " + state.posts[0]['wpBlog_title'] + " id: " + state.posts[0]['wpBlog_id'] );
         },
      
         //mutation to set api token to STORE. NOT USED?????

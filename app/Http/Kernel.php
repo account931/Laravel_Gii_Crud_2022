@@ -63,7 +63,7 @@ class Kernel extends HttpKernel
         'throttle'          => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'          => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 		'mySpatieRbacCheck'        => \App\Http\Middleware\SpatieRbacMiddle::class, //Force Spatie Rbac check on usual web request (not REST API)
-		'mySpatieRbacCheckRestApi' => \App\Http\Middleware\SpatieRbacMiddleRestApiVersion::class, //Force Spatie Rbac check on Rest Api request (not usuanl we requests)
+		'mySpatieRbacCheckRestApi' => \App\Http\Middleware\Vue_API_Middleware\SpatieRbacMiddleRestApiVersion::class, //Force Spatie Rbac check on Rest Api request (not usuanl we requests)
 		'myJsonForce'              => \App\Http\Middleware\MyForceJsonResponse::class, //Force json response on every api request
     ];
 

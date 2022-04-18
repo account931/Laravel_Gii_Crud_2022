@@ -1,4 +1,5 @@
 <?php
+//For regular web http
 //Model for {wpress_image_category}
 namespace App\models\wpBlogImages;
 

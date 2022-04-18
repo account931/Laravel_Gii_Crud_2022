@@ -24,7 +24,7 @@
 		        <!-- If no records -->
                 <div v-if="this.$store.state.posts.length == 0" class="col-sm-12 col-xs-12"> 
                     <hr>			
-			        <p class="text-danger"> No data fetched for yout Post {{this.currentDetailID + 1}} , visit first <router-link class="nav-link" to="/blog"> <button class="btn btn-success"> Vue Crud panel </button> </router-link> </p>
+			        <p class="text-danger"> No data fetched for yout Post {{this.currentDetailID + 1 }} , visit first <router-link class="nav-link" to="/blog"> <button class="btn btn-success"> Vue Crud panel </button> </router-link> </p>
 		        </div>
 			
 			
@@ -149,9 +149,15 @@
 			
             //console.log(this.$store.state.posts);
 	        //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
-	        var ID = this.$route.params.Pidd; //gets 2
-	        ID = ID - 1; //to comply with Vuex Store array, that starts with 0
-	        this.currentDetailID = ID; //set to this.state
+	        var ID = this.$route.params.Pidd; //gets 2, id of blog
+	        //ID = ID - 1; //to comply with Vuex Store array, that starts with 0
+			
+			//MegaFIX
+			//find the array position of object with "wpBlog_id" === ID in this.$store.state.posts
+			let position = this.$store.state.posts.findIndex(x => x.wpBlog_id === ID);
+			//alert(position);
+			this.currentDetailID = position; //set to this.state
+	        //this.currentDetailID = ID; //set to this.state
         },
 		
 		methods:{

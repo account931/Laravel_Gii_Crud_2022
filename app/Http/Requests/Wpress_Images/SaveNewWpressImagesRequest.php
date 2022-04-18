@@ -1,4 +1,5 @@
 <?php
+//Used for Crud simple(Web) only 
 //used to validate via Request Class (used to create new blog & images in tables {wpress_images_blog_post} & {wpress_image_images_stocks})
 //used in WpBlogImages /public function store(SaveNewWpressImagesRequest $request)
 //Used for validation via Request Class, not via controller
@@ -42,7 +43,7 @@ class SaveNewWpressImagesRequest extends FormRequest
 		
         return [
 		    'title'        => 'required|string|min:3|max:255',
-		    'description'  => 'required|string|min:5|max:255',
+		    'body'         => 'required|string|min:5|max:255',
 			'category_sel' => ['required', 'string', Rule::in($rolesList) ],  //integer];  //'category_sel' => ['required', 'string', Rule::in(['admin', 'second-zone']) ] , //integer];
             
 			//image validation https://hdtuto.com/article/laravel-57-image-upload-with-validation-example
@@ -71,21 +72,21 @@ class SaveNewWpressImagesRequest extends FormRequest
         return [
            //'username.required'  => Lang::get('userpasschange.usernamerequired'),
 		   'title.required'       => 'Kindly asking for a title',
-	       'description.required' => 'We need u to specify the article text',
-		   'description.min'      => 'We kindly require more than 5 letters for article text',
+	       'body.required'        => 'We need u to specify the article text',
+		   'body.min'             => 'We kindly require more than 5 letters for article text',
 		   'category_sel.in'      => 'Category has invalid value range', //range validation
-		   'imagesSet.required'    => 'Image is very much required',
-		   'imagesSet.*.image'     => 'Make sure it is an image',
-		   'imagesSet.*.mimes'     => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
-		   'imagesSet.max'         => 'Sorry! Maximum allowed size for an image is 2MB',
-		   //'filename.min'      => 'Your image is too small',
+		   'imagesSet.required'   => 'Image is very much required',
+		   'imagesSet.*.image'    => 'Make sure it is an image',
+		   'imagesSet.*.mimes'    => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
+		   'imagesSet.max'        => 'Sorry! Maximum allowed size for an image is 2MB',
+		   //'filename.min'       => 'Your image is too small',
 		];
 	}
 	 
 	 
 	 
     /**
-     * Return validation errors. Not used for REST api ???
+     * Return validation errors. 
      *
      * @param Validator $validator
      */

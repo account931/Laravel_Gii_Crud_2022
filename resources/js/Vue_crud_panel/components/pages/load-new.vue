@@ -271,7 +271,7 @@ export default {
             var that = this; //Explanation => if you use this.data, it is incorrect, because when 'this' reference the vue-app, you could use this.data, but here (ajax success callback function), this does not reference to vue-app, instead 'this' reference to whatever who called this function(ajax call)
             var formData = new FormData(); //new FormData(document.getElementById("myFormZZ"));
             formData.append('title',        this.title);
-            formData.append('description',  this.body);
+            formData.append('body',         this.body);
             formData.append('category_sel', this.selectV);
       
             var imagesUploaded = {};

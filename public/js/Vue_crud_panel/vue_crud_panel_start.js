@@ -5083,6 +5083,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -5095,23 +5098,524 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'edit',
+  name: 'edit-one-item',
   data: function data() {
+    var _ref;
+
     return {
-      title: 'Edit',
-      currentDetailID: 1
+      pageTitle: 'Edit one item',
+      inputTitleValue: '',
+      //contains loaded edited item's title (from DB) //form input "Title"
+      inputBodyValue: '',
+      //edited item's body (from DB) //form input "Body"
+      inputSelectV: '',
+      //form input <select> value
+      inputRemember: false,
+      //form checkbox
+      ajaxOneItem: [],
+      //one item/blog data to be used in edit form (filled with ajax) /*[{wpBlog_title:'bl', wpBlog_text:'bl-text', wpBlog_author:1, get_images:[{wpImStock_id:56, wpImStock_name:"product2.png"}] ],*/
+      currentDetailID: 0,
+      //Id of edited blog (filled with ajax)
+      tokenXX: '',
+      //csrf token
+      imageList: [],
+      //stores form uploaded images
+      isCreatingPost: false,
+      //flag for button text
+      dialogVisible: false,
+      //flag
+      dialogImageUrl: [(_ref = {
+        uid: 1625318532554,
+        name: "2254.png",
+        size: 30871,
+        type: "image/png"
+      }, _defineProperty(_ref, "uid", 1625318532554), _defineProperty(_ref, "lastModified", 1613050553593), _ref)],
+      //'',   //contains images to display as loaded
+      status_msg: '',
+      status: '',
+      errroList: [],
+      //list of validations errors of server-side validator
+      inputImagesValueX: [],
+      //item/post/blogs's images (which is being now edited,loaded from DB) // [{idN: 1, nameN: '1.png'}, {id: 2, name: '2.png'}]
+      oldImagesID_to_delete: [],
+      //array of images's IDs to delete while updateing the blog post (i.e User clicks "Delete image" on an image loaded from DB (while editing)), e.g [2, 56, 76] . On Server comes as string (???)
+      categoriesList: [] //contains Categories from DB (loaded with ajax)
+
     };
   },
-  //before mount
+  computed: {
+    ValidorErrorGet: function ValidorErrorGet() {
+      //make reactive ajax response 
+      return this.errroList;
+    },
+    //images that already loaded to DB
+    imggGet: function imggGet() {
+      return this.inputImagesValueX;
+    }
+  },
   beforeMount: function beforeMount() {
-    //console.log(this.$store.state.posts);
     //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
-    var ID = this.$route.params.Pidd; //gets 2
-    //ID = ID - 1; //to comply with Vuex Store array, that starts with 0
+    var ID = this.$route.params.Pidd; //gets int, e.g 2
 
-    this.currentDetailID = ID; //set to this.state
-  }
+    this.currentDetailID = ID;
+    console.log("Editing ID is " + this.currentDetailID); //get the csrf token
+
+    var token = document.head.querySelector('meta[name="csrf-token"]'); //gets meta tag with csrf
+
+    this.tokenXX = token.content; //gets csrf token and sets it to data.tokenXX
+    //run ajax to get One item
+
+    this.runAjaxToGetOneItem(this.currentDetailID);
+    this.getAjaxCategories(); //get /GET all DB table categories (to build <select> in loadnew.vue)            
+  },
+  methods: {
+    // ------ Element-UI Upload element METHODS ----------
+    //on adding new image to form, do update array {this.imageList} (used to store all form uploaded images & appended to form)
+    updateImageList: function updateImageList(file) {
+      this.imageList.push(file.raw); //console.log(this.imageList);
+    },
+    //if u click "Preview" icon in Element-UI image Layout
+    handlePictureCardPreview: function handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true; //show pop-up with image
+    },
+    //if u click "Delete" icon in Element-UI image Layout
+    handleRemove: function handleRemove(file) {
+      for (var i = 0; i < this.imageList.length; i++) {
+        if (file.uid == this.imageList[i].uid) {
+          this.imageList.splice(i, 1);
+        }
+      } //console.log(this.imageList);
+
+    },
+    beforeRemove: function beforeRemove(file) {},
+    // ------ End Element-UI Upload element METHODS ----------
+
+    /*
+    |--------------------------------------------------------------------------
+    | When user clicks to Delete an image (images loaded from DB)
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+    deleteDBImage: function deleteDBImage(imageName) {
+      //console.log("ID: " + imageName.idN + " Name: " + imageName.nameN );
+      //implement updating images List to append
+      //Find an array element clicked by imageName.id 
+      var arrEll;
+
+      for (var i = 0; i < this.inputImagesValueX.length; i++) {
+        if (this.inputImagesValueX[i].idN == imageName.idN) {
+          arrEll = i;
+          this.oldImagesID_to_delete.push(imageName.idN); //adds image ID to array (image to be deleted onserver-side)
+        }
+      } //console.log("Delete image " + arrEll);
+      //remove the clicked element from this.inputImagesValueX and therefore reactively remove it from UI displaying it in List of prev loader images
+
+
+      this.inputImagesValueX.splice(arrEll, 1); //console.log("Image removed " + this.inputImagesValueX);
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | When user clicks "Edit on some item" , i.e fires ajax to get 1 item data (to be used in edit/update form) via /GET 
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+    runAjaxToGetOneItem: function runAjaxToGetOneItem(idZ) {
+      var that = this; //to fix context issue
+
+      $('.loader-x').fadeIn(800); //show loader
+      //Add Bearer token to headers
+
+      $.ajaxSetup({
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY
+        }
+      });
+      $.ajax({
+        url: 'api/vue-crud/edit_get_one_blog/' + idZ,
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function success(data) {
+          //console.log("Successfully loaded data for edited article");            
+          //console.log("Loaded Edited data is: " + JSON.stringify(data, null, 4));
+          if (data.error == true) {
+            //if Rest endpoint returns any predefined error
+            var text = data.data; //alert(text);
+
+            that.showNotification(text);
+            swal("Check", text, "error"); //if OK
+          } else if (data.error == false) {
+            //alert("OK");
+            that.ajaxOneItem = data.data;
+            that.inputTitleValue = data.data[0].wpBlog_title; //gets and sets DB blog title to input
+
+            that.inputBodyValue = data.data[0].wpBlog_text; //gets and sets DB blog text to input
+
+            that.inputSelectV = data.data[0].wpBlog_category; //gets and sets DB blog category to <select>
+            //adding images loaded from DB
+
+            $.each(data.data[0].get_images, function (key, imageV) {
+              that.dialogImageUrl = "images/wpressImages/" + imageV.wpImStock_name;
+              var im = {
+                nameN: imageV.wpImStock_name,
+                idN: imageV.wpImStock_id
+              };
+              that.inputImagesValueX.push(im);
+            }); //that.dialogVisible = true;
+            //console.log(that.dialogImageUrl);
+            //console.log("imVal " + that.inputImagesValueX);                            
+
+            var tempoArray = []; //swal("Good", "Bearer Token is OK", "success");
+
+            swal("Good", "Data for Article " + data.data[0].wpBlog_id + " is loaded", "success");
+          }
+
+          $('.loader-x').fadeOut(800); //show loader
+        },
+        error: function error(errorZ) {
+          console.log(errorZ.responseText); //console.log(errorZ);
+
+          if (errorZ.responseJSON != null) {
+            if (errorZ.responseJSON.error == true || errorZ.responseJSON.error == "Unauthenticated.") {
+              //if Rest endpoint returns any predefined error
+              swal("Error: Unauthenticated", "Check Bearer Token", "error");
+            }
+          }
+
+          swal("Error", "Something crashed", "error");
+          $('.loader-x').fadeOut(800); //hide loader
+        }
+      }); //END AJAXed  part
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | When user clicks "Submit" in Edit Form, i.e fires ajax /PUT to update one post item  (via /PUT) 
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+    editOnePost: function editOnePost(e) {
+      e.preventDefault();
+
+      if (!this.validateForm()) {
+        return false;
+      }
+
+      $('.loader-x').fadeIn(800); //show loader
+
+      this.isCreatingPost = true; //flag for button text
+
+      var thatX = this;
+      var formData = new FormData(); //fix to load image via ajax, serialize() wont't work
+
+      formData.append('title', this.inputTitleValue); //adds "Title" input filed
+
+      formData.append('body', this.inputBodyValue); //adds "Body" input filed
+
+      formData.append('category_sel', this.inputSelectV); //adds <select> input filed
+
+      formData.append('imageToDelete', this.oldImagesID_to_delete); //append an array of old Images IDs to delete
+
+      formData.append("_method", "PUT"); //fix for PUT method
+      //append checkbox only if user tick it, i.e made image not neccesary
+
+      if (this.inputRemember == true) {
+        formData.append('remember', 'on'); //adds <select> input filed
+      } //append new uploaded images to formData
+
+
+      var imagesUploaded = {};
+      $.each(this.imageList, function (key, imageV) {
+        formData.append("imagesSet[".concat(key, "]"), imageV);
+      }); //console.log(this.imageList)
+      //Add Bearer token to headers
+
+      $.ajaxSetup({
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY
+        }
+      });
+      $.ajax({
+        url: 'api/vue-crud/admin_update_item/' + this.currentDetailID,
+        type: 'POST',
+        // though it is PUT, we make PUT in => formData. append("_method", "PUT")
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        //passing the data
+        data: formData,
+        success: function success(data) {
+          if (data.error == true) {
+            //if Rest API endpoint returns any predefined validation error
+            var text = data.data;
+            swal("Check", text, "error"); //if validation errors (i.e if REST Contoller returns json ['error': true, 'data': 'Good, but validation crashes', 'validateErrors': title['Validation err text'],  body['Validation err text']])
+
+            if (data.validateErrors) {
+              var tempoArray = []; //temporary array
+
+              for (var key in data.validateErrors) {
+                //Object iterate
+                var t = data.validateErrors[key][0]; //gets validation err message, e.g validateErrors.title[0]
+
+                tempoArray.push(t);
+              }
+
+              thatX.errroList = tempoArray; //change state errroList //{this-that} fix
+            } //if Update is OK
+
+          } else if (data.error == false) {
+            //return commit('setPosts', data ); //sets ajax results to store via mutation
+            //swal("Good", "Bearer Token is OK", "success");
+            swal({
+              html: true,
+              title: "Success",
+              text: data.data,
+              type: "success"
+            });
+            thatX.showNotification('Updated successfully Artcicle ' + thatX.currentDetailID);
+            thatX.errroList = []; //clear validation errors
+            // Clears inputs including uploaded files
+            //thatX.clearInputFieldsAndFiles(); //don't need to clear fileds for Update
+          }
+
+          $('.loader-x').fadeOut(800); //hide loader
+
+          thatX.isCreatingPost = false; //flag for button text
+        },
+        error: function error(errorZ) {
+          //swal("Error", "Crashed", "error"); 
+          //console.log(errorZ.responseText);
+          //console.log(errorZ);
+          if (errorZ.responseJSON != null) {
+            if (errorZ.responseJSON.error == true || errorZ.responseJSON.error == "Unauthenticated.") {
+              //if Rest endpoint returns any predefined error
+              swal("Error: Unauthenticated", "Check Bearer Token", "error");
+            }
+          }
+
+          swal("Error", "Something crashed", "error");
+          $('.loader-x').fadeOut(800); //hide loader
+
+          thatX.isCreatingPost = false; //flag for button text
+        }
+      });
+    },
+
+    /*
+     |--------------------------------------------------------------------------
+     | GET all DB table categories (to build <select> in loadnew.vue)
+     |--------------------------------------------------------------------------
+     |
+     |
+     */
+    getAjaxCategories: function getAjaxCategories() {
+      var _this = this;
+
+      fetch('api/vue-crud/get_categories', {
+        method: 'get',
+        //pass Bearer token in headers ()
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY
+        }
+      }).then(function (response) {
+        $('.loader-x').fadeOut(800); //hide loader
+
+        return response.json();
+      }).then(function (dataZ) {
+        //console.log("Categories => " + dataZ); 
+        if (dataZ.error == true || dataZ.error == "Unauthenticated.") {
+          //if Rest endpoint returns any predefined error
+          swal("Unauthenticated", "Check Bearer Token", "error");
+        } else if (dataZ.error == false) {
+          swal("Done", "Categories are loaded.", "success");
+          _this.categoriesList = dataZ.data; //console.log("Categ " + this.categoriesList[0].wpCategory_name);
+        }
+      })["catch"](function (err) {
+        swal("Crashed to get categories", "Danger", "error");
+      });
+    },
+
+    /*
+       |--------------------------------------------------------------------------
+       |Client-side form validation
+       |--------------------------------------------------------------------------
+       |
+       |
+       */
+    validateForm: function validateForm() {
+      // no vaildation for images - it is needed
+      if (!this.inputTitleValue) {
+        this.status = false;
+        this.showNotification('Post title cannot be empty');
+        return false;
+      }
+
+      if (!this.inputBodyValue) {
+        this.status = false;
+        this.showNotification('Post body cannot be empty');
+        return false;
+      }
+
+      if (!this.inputSelectV) {
+        this.status = false;
+        this.showNotification('Select cannot be empty');
+        return false;
+      }
+
+      this.showNotification(''); //clears error messages if any
+
+      return true;
+    },
+    showNotification: function showNotification(message) {
+      var _this2 = this;
+
+      this.status_msg = message;
+      setTimeout(function () {
+        //clears message in n seconds
+        _this2.status_msg = '';
+      }, 3000 * 155);
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | Clears inputs including uploaded files
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+    clearInputFieldsAndFiles: function clearInputFieldsAndFiles() {
+      this.inputTitleValue = '';
+      this.inputBodyValue = '';
+      this.inputSelectV = '';
+      this.imageList = '';
+      this.$refs.upload.clearFiles(); //clears the <el-upload> uploaded files <el-upload> must contain {ref="upload"}
+    }
+  },
+  mutations: {}
 });
 
 /***/ }),
@@ -5398,7 +5902,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var formData = new FormData(); //new FormData(document.getElementById("myFormZZ"));
 
       formData.append('title', this.title);
-      formData.append('description', this.body);
+      formData.append('body', this.body);
       formData.append('category_sel', this.selectV);
       var imagesUploaded = {};
       $.each(this.imageList, function (key, imageV) {
@@ -5847,11 +6351,17 @@ __webpack_require__.r(__webpack_exports__);
     console.log("beforeMount"); //console.log(this.$store.state.posts);
     //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
 
-    var ID = this.$route.params.Pidd; //gets 2
+    var ID = this.$route.params.Pidd; //gets 2, id of blog
+    //ID = ID - 1; //to comply with Vuex Store array, that starts with 0
+    //MegaFIX
+    //find the array position of object with "wpBlog_id" === ID in this.$store.state.posts
 
-    ID = ID - 1; //to comply with Vuex Store array, that starts with 0
+    var position = this.$store.state.posts.findIndex(function (x) {
+      return x.wpBlog_id === ID;
+    }); //alert(position);
 
-    this.currentDetailID = ID; //set to this.state
+    this.currentDetailID = position; //set to this.state
+    //this.currentDetailID = ID; //set to this.state
   },
   methods: {
     getIfPublished: function getIfPublished(status) {
@@ -105290,7 +105800,9 @@ var render = function () {
                                 staticClass: "btn btn-info",
                                 on: {
                                   click: function ($event) {
-                                    return _vm.goToViewDetail(i)
+                                    return _vm.goToViewDetail(
+                                      post.wpBlog_id - 1
+                                    )
                                   },
                                 },
                               },
@@ -105312,7 +105824,9 @@ var render = function () {
                                 staticClass: "btn btn-success",
                                 on: {
                                   click: function ($event) {
-                                    return _vm.goToEditDetail(i)
+                                    return _vm.goToEditDetail(
+                                      post.wpBlog_id - 1
+                                    )
                                   },
                                 },
                               },
@@ -105480,20 +105994,363 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "blog" }, [
-    _c("h1", [
-      _vm._v(
-        _vm._s(_vm.title) + " number " + _vm._s(this.currentDetailID) + " "
+  return _c(
+    "div",
+    { staticClass: "services" },
+    [
+      _c("h1", [
+        _vm._v(_vm._s(_vm.pageTitle) + " number "),
+        _c("b", [_vm._v(" " + _vm._s(this.currentDetailID))]),
+      ]),
+      _vm._v(" "),
+      _c(
+        "p",
+        { staticClass: "z-overlay-fix-2" },
+        [
+          _c(
+            "router-link",
+            { staticClass: "nav-link", attrs: { to: "/blog" } },
+            [
+              _c("i", {
+                staticClass: "fa fa-tag",
+                staticStyle: { "font-size": "24px" },
+              }),
+              _vm._v(" "),
+              _c("button", { staticClass: "btn" }, [
+                _vm._v(" Back to List of all "),
+                _c("i", {
+                  staticClass: "fa fa-tag",
+                  staticStyle: { "font-size": "14px" },
+                }),
+              ]),
+            ]
+          ),
+        ],
+        1
       ),
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _vm._v("\n\t\tEdit me here " + _vm._s(this.currentDetailID) + "  \n\t"),
-    ]),
-    _vm._v(" "),
-    _c("br"),
-    _c("br"),
-  ])
+      _vm._v(" "),
+      _c("p", [
+        _vm._v(" You are editing item with title:  "),
+        _c("i", { staticClass: "text-danger" }, [
+          _c("b", [_vm._v(" " + _vm._s(this.inputTitleValue) + "  ")]),
+        ]),
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.imggGet, function (imageXX, i) {
+        return _c("div", { key: i, staticClass: "alert alert-success" }, [
+          i == 0
+            ? _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
+                _c("p", [_vm._v(" Item's images ")]),
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.imggGet.length
+            ? _c("img", {
+                staticClass: "card-img-top my-adm-img",
+                attrs: { src: "images/wpressImages/" + imageXX.nameN },
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-danger",
+              staticStyle: { "font-size": "11px" },
+              on: {
+                click: function ($event) {
+                  return _vm.deleteDBImage(imageXX)
+                },
+              },
+            },
+            [_vm._v(" Delete "), _c("i", { staticClass: "fa fa-trash-o" })]
+          ),
+        ])
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          _vm.status_msg
+            ? _c(
+                "div",
+                {
+                  staticClass: "alert",
+                  class: {
+                    "alert-success": _vm.status,
+                    "alert-danger": !_vm.status,
+                  },
+                  attrs: { role: "alert" },
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.status_msg) +
+                      "\n            "
+                  ),
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.ValidorErrorGet, function (book, i) {
+            return _c("div", { key: i, staticClass: "alert alert-danger" }, [
+              _vm._v(
+                " \n                Error: " + _vm._s(book) + " \n            "
+              ),
+            ])
+          }),
+          _vm._v(" "),
+          _c("form", { attrs: { id: "myFormZZ" } }, [
+            _c("input", {
+              attrs: { type: "hidden", name: "_token" },
+              domProps: { value: _vm.tokenXX },
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleFormControlInput1" } }, [
+                _vm._v("Title"),
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputTitleValue,
+                    expression: "inputTitleValue",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  id: "title",
+                  type: "text",
+                  placeholder: "Post Title",
+                  required: "",
+                },
+                domProps: { value: _vm.inputTitleValue },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputTitleValue = $event.target.value
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                _vm._v("Post Content"),
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inputBodyValue,
+                    expression: "inputBodyValue",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: { id: "post-content", rows: "3", required: "" },
+                domProps: { value: _vm.inputBodyValue },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.inputBodyValue = $event.target.value
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                _vm._v("Category"),
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inputSelectV,
+                      expression: "inputSelectV",
+                    },
+                  ],
+                  staticClass: "mdb-select md-form",
+                  attrs: { name: "category_sel" },
+                  on: {
+                    change: function ($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function (o) {
+                          return o.selected
+                        })
+                        .map(function (o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.inputSelectV = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                  },
+                },
+                [
+                  _c(
+                    "option",
+                    { attrs: { disabled: "disabled", selected: "selected" } },
+                    [_vm._v("Choose category")]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(this.categoriesList, function (book, i) {
+                    return _c(
+                      "option",
+                      { key: i, domProps: { value: book.wpCategory_id } },
+                      [_vm._v(" " + _vm._s(book.wpCategory_name) + " ")]
+                    )
+                  }),
+                ],
+                2
+              ),
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {},
+              [
+                _c(
+                  "el-upload",
+                  {
+                    ref: "upload",
+                    attrs: {
+                      action: "https://jsonplaceholder.typicode.com/posts/",
+                      "list-type": "picture-card",
+                      "on-preview": _vm.handlePictureCardPreview,
+                      "on-remove": _vm.handleRemove,
+                      "before-remove": _vm.beforeRemove,
+                      "on-change": _vm.updateImageList,
+                      "auto-upload": false,
+                    },
+                  },
+                  [_c("i", { staticClass: "el-icon-plus" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-dialog",
+                  {
+                    attrs: { visible: _vm.dialogVisible },
+                    on: {
+                      "update:visible": function ($event) {
+                        _vm.dialogVisible = $event
+                      },
+                    },
+                  },
+                  [
+                    _c("img", {
+                      attrs: {
+                        width: "100%",
+                        src: _vm.dialogImageUrl,
+                        alt: "",
+                      },
+                    }),
+                  ]
+                ),
+              ],
+              1
+            ),
+          ]),
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+        _c("div", { staticClass: "checkbox" }, [
+          _c("label", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.inputRemember,
+                  expression: "inputRemember",
+                },
+              ],
+              staticClass: "larger",
+              attrs: { type: "checkbox", name: "remember" },
+              domProps: {
+                checked: Array.isArray(_vm.inputRemember)
+                  ? _vm._i(_vm.inputRemember, null) > -1
+                  : _vm.inputRemember,
+              },
+              on: {
+                change: function ($event) {
+                  var $$a = _vm.inputRemember,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && (_vm.inputRemember = $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        (_vm.inputRemember = $$a
+                          .slice(0, $$i)
+                          .concat($$a.slice($$i + 1)))
+                    }
+                  } else {
+                    _vm.inputRemember = $$c
+                  }
+                },
+              },
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "ch-text" }, [
+              _vm._v(" New images not required "),
+            ]),
+          ]),
+          _c("hr"),
+        ]),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-footer" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { type: "button" },
+            on: { click: _vm.editOnePost },
+          },
+          [
+            _vm._v(
+              "\n                " +
+                _vm._s(
+                  _vm.isCreatingPost ? "Updating..." : "Start Post Updating "
+                ) +
+                "\n            "
+            ),
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { type: "button" },
+            on: { click: _vm.clearInputFieldsAndFiles },
+          },
+          [_vm._v("\n                Clear\n            ")]
+        ),
+      ]),
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -124389,6 +125246,12 @@ var debug = "development" !== 'production'; //Vuex store itself
           swal("Done", "Articles are loaded (axios) (Vuex store).", "success");
           return commit('setPosts', dataZ.data); //sets ajax results to store via mutation
         }
+
+        if (dataZ.data.error == true) {
+          //If predefined error fires
+          swal("Stopped", dataZ.data.data, "error");
+          return false;
+        }
       })["catch"](function (err) {
         $('.loader-x').fadeOut(800); //hide loader
 
@@ -124482,7 +125345,7 @@ var debug = "development" !== 'production'; //Vuex store itself
       state.posts = response.data
       /*.data*/
       ;
-      console.log('setPosts executed in store ' + response.data[0]['wpBlog_title'] + " state=> " + state.posts[0]['wpBlog_title']);
+      console.log('setPosts executed in store ' + response.data[0]['wpBlog_title'] + " state=> " + state.posts[0]['wpBlog_title'] + " id: " + state.posts[0]['wpBlog_id']);
     },
     //mutation to set api token to STORE. NOT USED?????
     setApiToken: function setApiToken(state, response) {

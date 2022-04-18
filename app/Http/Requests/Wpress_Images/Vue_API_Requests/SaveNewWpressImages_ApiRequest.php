@@ -1,18 +1,20 @@
 <?php
-//Used both for Crud simple only(Web) 
-//used to validate via Request Class (used to edit blog & images in tables {wpress_images_blog_post} & {wpress_image_images_stocks})
-//used in WpBlogImages /public function updatePost(UpdateRecordWpressImagesRequest $request)
+//Used for Vue Crud Panel (Api) only
+//used to validate via Request Class (used to create new blog & images in tables {wpress_images_blog_post} & {wpress_image_images_stocks})
+//used in WpBlogImages /public function store(SaveNewWpressImagesRequest $request)
 //Used for validation via Request Class, not via controller
 
-namespace App\Http\Requests\Wpress_Images;
+namespace App\Http\Requests\Wpress_Images\Vue_API_Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule; //for in: validation
-use App\models\wpBlogImages\Wpress_images_Category; //model for DB table {wpressimage_category} for Range in: validation
+use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Category; //model for DB table {wpressimage_category} for Range in: validation
 
-class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpressImagesRequest
+class SaveNewWpressImages_ApiRequest extends FormRequest
 {
+	public $validator = null; //must have to override Return validation errors. In this case it will return and exucute code in Controller, even if Request Validation fails
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -49,8 +51,7 @@ class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpress
 			//image validation https://hdtuto.com/article/laravel-57-image-upload-with-validation-example
 			//'filename' => ['required', /*'image',*/ 'mimes:jpeg,png,jpg,gif,svg', 'max:2048' ], // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',,
 		    
-			//image file is required is only if checkbox 'remember' is unticked
-			'imagesSet'   => 'required_without:remember|array', //'required|array',  //'required_without:remember'
+			'imagesSet'   => 'required|array', //'required|array', 
             'imagesSet.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' //min:2048
 		];
 
@@ -71,27 +72,43 @@ class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpress
 		
         // use trans instead on Lang 
         return [
-           //'username.required'         => Lang::get('userpasschange.usernamerequired'),
-		   'title.required'              => 'Kindly asking for a title',
-	       'body.required'               => 'We need u to specify the article text',
-		   'body.min'                    => 'We kindly require more than 5 letters for article text',
-		   'category_sel.in'             => 'Category has invalid value range', //range validation
-		   //'filename.required'         => 'Image is very much required', 
-		   'imagesSet.required_without:remember'   => 'Image is very much required unless you tick selectbox', 
-		   'imagesSet.*.image'            => 'Make sure it is an image',
-		   'imagesSet.*.mimes'            => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
-		   'imagesSet.max'                => 'Sorry! Maximum allowed size for an image is 2MB',
-		   //'filename.min'              => 'Your image is too small',
+           //'username.required'  => Lang::get('userpasschange.usernamerequired'),
+		   'title.required'       => 'Kindly asking for a title',
+	       'body.required'        => 'We need u to specify the article text',
+		   'body.min'             => 'We kindly require more than 5 letters for article text',
+		   'category_sel.in'      => 'Category has invalid value range', //range validation
+		   'imagesSet.required'   => 'Image is very much required',
+		   'imagesSet.*.image'    => 'Make sure it is an image',
+		   'imagesSet.*.mimes'    => 'Images must be .jpeg, .png, .jpg, .gif, .svg file. Max size is 2048',
+		   'imagesSet.max'        => 'Sorry! Maximum allowed size for an image is 2MB',
+		   //'filename.min'       => 'Your image is too small',
 		];
 	}
 	 
 	 
+	/**
+     * To override Return validation errors. In this case it will return and exucute code in Controller, even if Request Validation fails
+	 * must include in Class code: public $validator = null;
+     * @param Validator $validator
+     * 
+    */
+    
+    protected function failedValidation(Validator $validator)
+    {
+        $this->validator = $validator;
+        //return response()->json(['error' => true, 'errors' => $validator->errors()->all()]);
+    }
+     
+
+
 	 
     /**
-     * Return validation errors 
+     * Return validation errors. Not used for REST api ???
      *
      * @param Validator $validator
      */
+	 
+	/*
     public function withValidator(Validator $validator)
     {
 	
@@ -99,8 +116,7 @@ class UpdateRecordWpressImagesRequest extends FormRequest   //UpdateRecordWpress
             return redirect('/createNewWpressImg')->withInput()->with('flashMessageFailX', 'Validation Failed!!!' )->withErrors($validator);
         }
 	}
-	 
-	
+	*/
 
    
 	 
