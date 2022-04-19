@@ -2,131 +2,159 @@
 <template>
 
 	<div class="services">
-		<h1>{{pageTitle}} number <b> {{this.currentDetailID}}</b></h1>
+	
+	
+	    <!--------- Unauthorized/unlogged Section ------> 
+        <div v-if="this.$store.state.passport_api_tokenY == null" class="col-sm-12 col-xs-12 alert alert-info"> <!--auth check if Passport Token is set, i.e user is logged -->
+            <!-- Display subcomponent/you_are_not_logged.vue -->
+            <you-are-not-logged-page></you-are-not-logged-page>         
+        </div>
         
-		<!--Checkbox: {{inputRemember}} -->
+        
+        
+        <!--------- Authorized/Logged Section ----------> 
+        <div v-else-if="this.$store.state.passport_api_tokenY != null">
+				
+		    <p>Details</p>
+			
+
+				
+		    <h1>{{pageTitle}} number <b> {{this.currentDetailID}}</b></h1>
+        
+		    <!--Checkbox: {{inputRemember}} -->
 		 
-        <!-- Nav Link go back -->
-		<p class="z-overlay-fix-2"> 
-            <router-link class="nav-link" to="/blog">
-                <i class="fa fa-tag" style="font-size:24px"></i>
-                <button class="btn"> Back to List of all <i class="fa fa-tag" style="font-size:14px"></i></button>
-            </router-link>
-        </p>
+            <!-- Nav Link go back -->
+		    <p class="z-overlay-fix-2"> 
+                <router-link class="nav-link" to="/blog">
+                    <i class="fa fa-tag" style="font-size:24px"></i>
+                    <button class="btn"> Back to List of all <i class="fa fa-tag" style="font-size:14px"></i></button>
+                </router-link>
+            </p>
 
         
-        <!-- V loop over ajax success data -->
-        <p> You are editing item with title:  <i class="text-danger"><b> {{this.inputTitleValue}}  </b></i></p>
-        <!-- End V loop over ajax success data -->
+            <!-- V loop over ajax success data -->
+            <p> You are editing item with title:  <i class="text-danger"><b> {{this.inputTitleValue}}  </b></i></p>
+            <!-- End V loop over ajax success data -->
         
         
-        <!-- Display Loaded images -->
-        <div v-for="(imageXX, i) in imggGet " :key="i" class="alert alert-success"> 
-            <div class="col-sm-12 col-xs-12"  v-if="i  == 0"> <p> Item's images </p></div>
-            <img v-if="imggGet.length" class="card-img-top my-adm-img" :src="`images/wpressImages/${imageXX.nameN}`"/>
-            <button style="font-size:11px" class="btn btn-danger"  @click="deleteDBImage(imageXX)"> Delete <i class="fa fa-trash-o"></i></button>
-        </div>
-        
-        <!------- INJECTED ------->
-        <div class="card-body">
-            <div v-if="status_msg" :class="{ 'alert-success': status, 'alert-danger': !status }" class="alert" role="alert">
-                {{ status_msg }}
+            <!-- Display Loaded images -->
+            <div v-for="(imageXX, i) in imggGet " :key="i" class="alert alert-success"> 
+                <div class="col-sm-12 col-xs-12"  v-if="i == 0"> <p> Item's images </p></div>
+                <img v-if="imggGet.length" class="card-img-top my-adm-img" :src="`images/wpressImages/${imageXX.nameN}`"/>
+                <button style="font-size:11px" class="btn btn-danger"  @click="deleteDBImage(imageXX)"> Delete <i class="fa fa-trash-o"></i></button>
             </div>
         
-            <!-- Display Validation errors if any come from Controller Request Php validator -->   
-            <div v-for="(book, i) in ValidorErrorGet " :key="i" class="alert alert-danger"> 
-                Error: {{ book }} 
-            </div>
+            <!------- INJECTED ------->
+            <div class="card-body">
+					
+                    <div v-if="status_msg" :class="{ 'alert-success': status, 'alert-danger': !status }" class="alert" role="alert">
+                        {{ status_msg }}
+                    </div>
+        
+                        <!-- Display Validation errors if any come from Controller Request Php validator -->   
+                        <div v-for="(book, i) in ValidorErrorGet " :key="i" class="alert alert-danger"> 
+                            Error: {{ book }} 
+                        </div>
         
 	  
-            <form id="myFormZZ">
-	            <input type="hidden" name="_token" :value="tokenXX" /> <!-- csfr token -->
+                        <form id="myFormZZ">
+	                        <input type="hidden" name="_token" :value="tokenXX" /> <!-- csfr token -->
 		
-		        <!-- Title -->
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Title</label>
-                    <input id="title" type="text" class="form-control" placeholder="Post Title" v-model="inputTitleValue" required>
-                </div>
+		                    <!-- Title -->
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Title</label>
+                                <input id="title" type="text" class="form-control" placeholder="Post Title" v-model="inputTitleValue" required>
+                            </div>
         
-                <!-- Body -->
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Post Content</label>
-                    <textarea id="post-content" v-model="inputBodyValue" class="form-control" rows="3" required />
-                </div>
+                            <!-- Body -->
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Post Content</label>
+                                <textarea id="post-content" v-model="inputBodyValue" class="form-control" rows="3" required />
+                            </div>
         
-                <!-- Select category -->
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Category</label>
+                            <!-- Select category -->
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Category</label>
         
-                    <select name="category_sel" class="mdb-select md-form" v-model="inputSelectV">
-				        <option  disabled="disabled"  selected="selected">Choose category</option>
-                            <!-- Loop -->
-				            <option v-for="(book, i) in this.categoriesList " :key="i" :value="book.wpCategory_id"  > {{ book.wpCategory_name}} </option>
-		            </select>
-		        </div>
-                <!--  END Select category -->
+                                <select name="category_sel" class="mdb-select md-form" v-model="inputSelectV">
+				                    <option  disabled="disabled"  selected="selected">Choose category</option>
+                                    <!-- Loop -->
+				                    <option v-for="(book, i) in this.categoriesList " :key="i" :value="book.wpCategory_id"  > {{ book.wpCategory_name}} </option>
+		                        </select>
+		                    </div>
+                            <!--  END Select category -->
         
         
-                <div class>
-                    <!-- Element-UI Upload element (contains "+" button to add new image and contains thumbnails views of loaded images) -->
-                    <!--ref="upload" is used to fire  clearFiles() in <el-upload> on ajax success -->
-                    <el-upload
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        ref="upload" 
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                        :before-remove="beforeRemove"
-                        :on-change="updateImageList"
-                        :auto-upload="false"
-                    >
-                        <i class="el-icon-plus" />
-                    </el-upload>
+                            <div class>
+                                <!-- Element-UI Upload element (contains "+" button to add new image and contains thumbnails views of loaded images) -->
+                                <!--ref="upload" is used to fire  clearFiles() in <el-upload> on ajax success -->
+                                <el-upload
+                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    ref="upload" 
+                                    list-type="picture-card"
+                                    :on-preview="handlePictureCardPreview"
+                                    :on-remove="handleRemove"
+                                    :before-remove="beforeRemove"
+                                    :on-change="updateImageList"
+                                    :auto-upload="false"
+                                >
+                                    <i class="el-icon-plus" />
+                                </el-upload>
           
-                    <!-- Element-UI Preview Uploaded element (if u hover over it, there appears "+"/"delete" icons, if u click "+" icon the full-screen image pop-up'll emerge, pop-up is hidden by dafault) -->
-                    <el-dialog :visible.sync="dialogVisible">
-                         <img width="100%" :src="dialogImageUrl" alt>
-                    </el-dialog>
-                </div>
-            </form>
-        </div>
+                                <!-- Element-UI Preview Uploaded element (if u hover over it, there appears "+"/"delete" icons, if u click "+" icon the full-screen image pop-up'll emerge, pop-up is hidden by dafault) -->
+                                <el-dialog :visible.sync="dialogVisible">
+                                    <img width="100%" :src="dialogImageUrl" alt>
+                                </el-dialog>
+                            </div>
+                        </form>
+                    </div> <!-- end class="card-body" -->
 	
 	
 	
-	    <!-- Checkbox "Do not update image" --> 
-        <div class="col-md-8 col-md-offset-2">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" v-model="inputRemember" class="larger" name="remember" > <span class="ch-text"> New images not required </span>
-                </label><hr>
-            </div>
-        </div>
-		<!-- Checkbox "Do not update image" --> 
+	                <!-- Checkbox "Do not update image" --> 
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" v-model="inputRemember" class="larger" name="remember" > <span class="ch-text"> New images not required </span>
+                            </label><hr>
+                        </div>
+                    </div>
+		            <!-- Checkbox "Do not update image" --> 
 					
 					
-        <div class="card-footer">
-            <!--Button to submit -->
-            <button
-                type="button"
-                class="btn btn-success"
-                @click="editOnePost"
-            >
-                {{ isCreatingPost ? "Updating..." : "Start Post Updating " }}
-            </button>
+                    <div class="card-footer">
+                        <!--Button to submit -->
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            @click="editOnePost"
+                        >
+                            {{ isCreatingPost ? "Updating..." : "Start Post Updating " }}
+                        </button>
       
-            <!--Button to clear the fields -->
-            <button type="button" class="btn btn-success" @click="clearInputFieldsAndFiles">
-                Clear
-            </button>
-        </div>
-    </div> 
-</div>
+                        <!--Button to clear the fields -->
+                        <button type="button" class="btn btn-success" @click="clearInputFieldsAndFiles">
+                            Clear
+                        </button>
+                    </div><!-- end class="card-footer" -->
+					
+		
+					
+					
+        </div> <!--------- End Authorized/Logged Section ----------> 
+    </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
+	//using other sub-component 
+    import youAreNotLogged  from '../subcomponents/you_are_not_logged.vue';
 	export default{
 		name:'edit-one-item',
+		//using other sub-component 
+	    components: {
+            'you-are-not-logged-page' : youAreNotLogged,
+        },
 		data (){ 
 			return{
 				pageTitle:'Edit one item',
@@ -144,7 +172,7 @@
                 status_msg: '',
                 status: '',
                 errroList: [],         //list of validations errors of server-side validator
-                inputImagesValueX: [],     //item/post/blogs's images (which is being now edited,loaded from DB) // [{idN: 1, nameN: '1.png'}, {id: 2, name: '2.png'}]
+                inputImagesValueX: [],     //item/post/blogs's images (which is being now edited,loaded from DB) // array of objects [{idN: 1, nameN: '1.png'}, {id: 2, name: '2.png'}]
                 oldImagesID_to_delete: [], //array of images's IDs to delete while updateing the blog post (i.e User clicks "Delete image" on an image loaded from DB (while editing)), e.g [2, 56, 76] . On Server comes as string (???)
                 categoriesList: [],        //contains Categories from DB (loaded with ajax)
             }
@@ -163,6 +191,14 @@
         
         
         beforeMount() {
+		
+		    //Passport token check
+            if(this.$store.state.passport_api_tokenY == null){
+                swal("View one page says: Access denied", "You are not logged", "error");
+                return false;
+            }
+		
+		
             //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
 	        var ID = this.$route.params.Pidd; //gets int, e.g 2
 	        this.currentDetailID = ID;  

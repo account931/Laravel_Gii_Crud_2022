@@ -5084,6 +5084,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _subcomponents_you_are_not_logged_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../subcomponents/you_are_not_logged.vue */ "./resources/js/Vue_crud_panel/components/subcomponents/you_are_not_logged.vue");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
@@ -5211,9 +5212,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+ //using other sub-component 
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'edit-one-item',
+  //using other sub-component 
+  components: {
+    'you-are-not-logged-page': _subcomponents_you_are_not_logged_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   data: function data() {
     var _ref;
 
@@ -5251,7 +5280,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       errroList: [],
       //list of validations errors of server-side validator
       inputImagesValueX: [],
-      //item/post/blogs's images (which is being now edited,loaded from DB) // [{idN: 1, nameN: '1.png'}, {id: 2, name: '2.png'}]
+      //item/post/blogs's images (which is being now edited,loaded from DB) // array of objects [{idN: 1, nameN: '1.png'}, {id: 2, name: '2.png'}]
       oldImagesID_to_delete: [],
       //array of images's IDs to delete while updateing the blog post (i.e User clicks "Delete image" on an image loaded from DB (while editing)), e.g [2, 56, 76] . On Server comes as string (???)
       categoriesList: [] //contains Categories from DB (loaded with ajax)
@@ -5269,7 +5298,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   beforeMount: function beforeMount() {
-    //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
+    //Passport token check
+    if (this.$store.state.passport_api_tokenY == null) {
+      swal("View one page says: Access denied", "You are not logged", "error");
+      return false;
+    } //getting route ID => e.g "wpBlogVueFrameWork#/details/2", gets 2. {Pid} is set in 'pages/home' in => this.$router.push({name:'details',params:{Pid:proId}})
+
+
     var ID = this.$route.params.Pidd; //gets int, e.g 2
 
     this.currentDetailID = ID;
@@ -6204,6 +6239,26 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -105994,363 +106049,402 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "services" },
-    [
-      _c("h1", [
-        _vm._v(_vm._s(_vm.pageTitle) + " number "),
-        _c("b", [_vm._v(" " + _vm._s(this.currentDetailID))]),
-      ]),
-      _vm._v(" "),
-      _c(
-        "p",
-        { staticClass: "z-overlay-fix-2" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "nav-link", attrs: { to: "/blog" } },
-            [
-              _c("i", {
-                staticClass: "fa fa-tag",
-                staticStyle: { "font-size": "24px" },
-              }),
-              _vm._v(" "),
-              _c("button", { staticClass: "btn" }, [
-                _vm._v(" Back to List of all "),
-                _c("i", {
-                  staticClass: "fa fa-tag",
-                  staticStyle: { "font-size": "14px" },
-                }),
-              ]),
-            ]
-          ),
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("p", [
-        _vm._v(" You are editing item with title:  "),
-        _c("i", { staticClass: "text-danger" }, [
-          _c("b", [_vm._v(" " + _vm._s(this.inputTitleValue) + "  ")]),
-        ]),
-      ]),
-      _vm._v(" "),
-      _vm._l(_vm.imggGet, function (imageXX, i) {
-        return _c("div", { key: i, staticClass: "alert alert-success" }, [
-          i == 0
-            ? _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
-                _c("p", [_vm._v(" Item's images ")]),
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.imggGet.length
-            ? _c("img", {
-                staticClass: "card-img-top my-adm-img",
-                attrs: { src: "images/wpressImages/" + imageXX.nameN },
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger",
-              staticStyle: { "font-size": "11px" },
-              on: {
-                click: function ($event) {
-                  return _vm.deleteDBImage(imageXX)
-                },
-              },
-            },
-            [_vm._v(" Delete "), _c("i", { staticClass: "fa fa-trash-o" })]
-          ),
-        ])
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "card-body" },
-        [
-          _vm.status_msg
-            ? _c(
-                "div",
-                {
-                  staticClass: "alert",
-                  class: {
-                    "alert-success": _vm.status,
-                    "alert-danger": !_vm.status,
-                  },
-                  attrs: { role: "alert" },
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.status_msg) +
-                      "\n            "
-                  ),
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.ValidorErrorGet, function (book, i) {
-            return _c("div", { key: i, staticClass: "alert alert-danger" }, [
-              _vm._v(
-                " \n                Error: " + _vm._s(book) + " \n            "
-              ),
-            ])
-          }),
-          _vm._v(" "),
-          _c("form", { attrs: { id: "myFormZZ" } }, [
-            _c("input", {
-              attrs: { type: "hidden", name: "_token" },
-              domProps: { value: _vm.tokenXX },
-            }),
+  return _c("div", { staticClass: "services" }, [
+    this.$store.state.passport_api_tokenY == null
+      ? _c(
+          "div",
+          { staticClass: "col-sm-12 col-xs-12 alert alert-info" },
+          [_c("you-are-not-logged-page")],
+          1
+        )
+      : this.$store.state.passport_api_tokenY != null
+      ? _c(
+          "div",
+          [
+            _c("p", [_vm._v("Details")]),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "exampleFormControlInput1" } }, [
-                _vm._v("Title"),
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inputTitleValue,
-                    expression: "inputTitleValue",
-                  },
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  id: "title",
-                  type: "text",
-                  placeholder: "Post Title",
-                  required: "",
-                },
-                domProps: { value: _vm.inputTitleValue },
-                on: {
-                  input: function ($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.inputTitleValue = $event.target.value
-                  },
-                },
-              }),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-                _vm._v("Post Content"),
-              ]),
-              _vm._v(" "),
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inputBodyValue,
-                    expression: "inputBodyValue",
-                  },
-                ],
-                staticClass: "form-control",
-                attrs: { id: "post-content", rows: "3", required: "" },
-                domProps: { value: _vm.inputBodyValue },
-                on: {
-                  input: function ($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.inputBodyValue = $event.target.value
-                  },
-                },
-              }),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-                _vm._v("Category"),
-              ]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.inputSelectV,
-                      expression: "inputSelectV",
-                    },
-                  ],
-                  staticClass: "mdb-select md-form",
-                  attrs: { name: "category_sel" },
-                  on: {
-                    change: function ($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function (o) {
-                          return o.selected
-                        })
-                        .map(function (o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.inputSelectV = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                  },
-                },
-                [
-                  _c(
-                    "option",
-                    { attrs: { disabled: "disabled", selected: "selected" } },
-                    [_vm._v("Choose category")]
-                  ),
-                  _vm._v(" "),
-                  _vm._l(this.categoriesList, function (book, i) {
-                    return _c(
-                      "option",
-                      { key: i, domProps: { value: book.wpCategory_id } },
-                      [_vm._v(" " + _vm._s(book.wpCategory_name) + " ")]
-                    )
-                  }),
-                ],
-                2
-              ),
+            _c("h1", [
+              _vm._v(_vm._s(_vm.pageTitle) + " number "),
+              _c("b", [_vm._v(" " + _vm._s(this.currentDetailID))]),
             ]),
             _vm._v(" "),
             _c(
-              "div",
-              {},
+              "p",
+              { staticClass: "z-overlay-fix-2" },
               [
                 _c(
-                  "el-upload",
-                  {
-                    ref: "upload",
-                    attrs: {
-                      action: "https://jsonplaceholder.typicode.com/posts/",
-                      "list-type": "picture-card",
-                      "on-preview": _vm.handlePictureCardPreview,
-                      "on-remove": _vm.handleRemove,
-                      "before-remove": _vm.beforeRemove,
-                      "on-change": _vm.updateImageList,
-                      "auto-upload": false,
-                    },
-                  },
-                  [_c("i", { staticClass: "el-icon-plus" })]
-                ),
-                _vm._v(" "),
-                _c(
-                  "el-dialog",
-                  {
-                    attrs: { visible: _vm.dialogVisible },
-                    on: {
-                      "update:visible": function ($event) {
-                        _vm.dialogVisible = $event
-                      },
-                    },
-                  },
+                  "router-link",
+                  { staticClass: "nav-link", attrs: { to: "/blog" } },
                   [
-                    _c("img", {
-                      attrs: {
-                        width: "100%",
-                        src: _vm.dialogImageUrl,
-                        alt: "",
-                      },
+                    _c("i", {
+                      staticClass: "fa fa-tag",
+                      staticStyle: { "font-size": "24px" },
                     }),
+                    _vm._v(" "),
+                    _c("button", { staticClass: "btn" }, [
+                      _vm._v(" Back to List of all "),
+                      _c("i", {
+                        staticClass: "fa fa-tag",
+                        staticStyle: { "font-size": "14px" },
+                      }),
+                    ]),
                   ]
                 ),
               ],
               1
             ),
-          ]),
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-        _c("div", { staticClass: "checkbox" }, [
-          _c("label", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.inputRemember,
-                  expression: "inputRemember",
-                },
-              ],
-              staticClass: "larger",
-              attrs: { type: "checkbox", name: "remember" },
-              domProps: {
-                checked: Array.isArray(_vm.inputRemember)
-                  ? _vm._i(_vm.inputRemember, null) > -1
-                  : _vm.inputRemember,
-              },
-              on: {
-                change: function ($event) {
-                  var $$a = _vm.inputRemember,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 && (_vm.inputRemember = $$a.concat([$$v]))
-                    } else {
-                      $$i > -1 &&
-                        (_vm.inputRemember = $$a
-                          .slice(0, $$i)
-                          .concat($$a.slice($$i + 1)))
-                    }
-                  } else {
-                    _vm.inputRemember = $$c
-                  }
-                },
-              },
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(" You are editing item with title:  "),
+              _c("i", { staticClass: "text-danger" }, [
+                _c("b", [_vm._v(" " + _vm._s(this.inputTitleValue) + "  ")]),
+              ]),
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.imggGet, function (imageXX, i) {
+              return _c("div", { key: i, staticClass: "alert alert-success" }, [
+                i == 0
+                  ? _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
+                      _c("p", [_vm._v(" Item's images ")]),
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.imggGet.length
+                  ? _c("img", {
+                      staticClass: "card-img-top my-adm-img",
+                      attrs: { src: "images/wpressImages/" + imageXX.nameN },
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    staticStyle: { "font-size": "11px" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.deleteDBImage(imageXX)
+                      },
+                    },
+                  },
+                  [
+                    _vm._v(" Delete "),
+                    _c("i", { staticClass: "fa fa-trash-o" }),
+                  ]
+                ),
+              ])
             }),
             _vm._v(" "),
-            _c("span", { staticClass: "ch-text" }, [
-              _vm._v(" New images not required "),
-            ]),
-          ]),
-          _c("hr"),
-        ]),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-footer" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { type: "button" },
-            on: { click: _vm.editOnePost },
-          },
-          [
-            _vm._v(
-              "\n                " +
-                _vm._s(
-                  _vm.isCreatingPost ? "Updating..." : "Start Post Updating "
-                ) +
-                "\n            "
+            _c(
+              "div",
+              { staticClass: "card-body" },
+              [
+                _vm.status_msg
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert",
+                        class: {
+                          "alert-success": _vm.status,
+                          "alert-danger": !_vm.status,
+                        },
+                        attrs: { role: "alert" },
+                      },
+                      [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm.status_msg) +
+                            "\n                    "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.ValidorErrorGet, function (book, i) {
+                  return _c(
+                    "div",
+                    { key: i, staticClass: "alert alert-danger" },
+                    [
+                      _vm._v(
+                        " \n                            Error: " +
+                          _vm._s(book) +
+                          " \n                        "
+                      ),
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _c("form", { attrs: { id: "myFormZZ" } }, [
+                  _c("input", {
+                    attrs: { type: "hidden", name: "_token" },
+                    domProps: { value: _vm.tokenXX },
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      { attrs: { for: "exampleFormControlInput1" } },
+                      [_vm._v("Title")]
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inputTitleValue,
+                          expression: "inputTitleValue",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "title",
+                        type: "text",
+                        placeholder: "Post Title",
+                        required: "",
+                      },
+                      domProps: { value: _vm.inputTitleValue },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.inputTitleValue = $event.target.value
+                        },
+                      },
+                    }),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      { attrs: { for: "exampleFormControlTextarea1" } },
+                      [_vm._v("Post Content")]
+                    ),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inputBodyValue,
+                          expression: "inputBodyValue",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "post-content", rows: "3", required: "" },
+                      domProps: { value: _vm.inputBodyValue },
+                      on: {
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.inputBodyValue = $event.target.value
+                        },
+                      },
+                    }),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      { attrs: { for: "exampleFormControlTextarea1" } },
+                      [_vm._v("Category")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.inputSelectV,
+                            expression: "inputSelectV",
+                          },
+                        ],
+                        staticClass: "mdb-select md-form",
+                        attrs: { name: "category_sel" },
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.inputSelectV = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                        },
+                      },
+                      [
+                        _c(
+                          "option",
+                          {
+                            attrs: {
+                              disabled: "disabled",
+                              selected: "selected",
+                            },
+                          },
+                          [_vm._v("Choose category")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(this.categoriesList, function (book, i) {
+                          return _c(
+                            "option",
+                            { key: i, domProps: { value: book.wpCategory_id } },
+                            [_vm._v(" " + _vm._s(book.wpCategory_name) + " ")]
+                          )
+                        }),
+                      ],
+                      2
+                    ),
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {},
+                    [
+                      _c(
+                        "el-upload",
+                        {
+                          ref: "upload",
+                          attrs: {
+                            action:
+                              "https://jsonplaceholder.typicode.com/posts/",
+                            "list-type": "picture-card",
+                            "on-preview": _vm.handlePictureCardPreview,
+                            "on-remove": _vm.handleRemove,
+                            "before-remove": _vm.beforeRemove,
+                            "on-change": _vm.updateImageList,
+                            "auto-upload": false,
+                          },
+                        },
+                        [_c("i", { staticClass: "el-icon-plus" })]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-dialog",
+                        {
+                          attrs: { visible: _vm.dialogVisible },
+                          on: {
+                            "update:visible": function ($event) {
+                              _vm.dialogVisible = $event
+                            },
+                          },
+                        },
+                        [
+                          _c("img", {
+                            attrs: {
+                              width: "100%",
+                              src: _vm.dialogImageUrl,
+                              alt: "",
+                            },
+                          }),
+                        ]
+                      ),
+                    ],
+                    1
+                  ),
+                ]),
+              ],
+              2
             ),
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { type: "button" },
-            on: { click: _vm.clearInputFieldsAndFiles },
-          },
-          [_vm._v("\n                Clear\n            ")]
-        ),
-      ]),
-    ],
-    2
-  )
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+              _c("div", { staticClass: "checkbox" }, [
+                _c("label", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.inputRemember,
+                        expression: "inputRemember",
+                      },
+                    ],
+                    staticClass: "larger",
+                    attrs: { type: "checkbox", name: "remember" },
+                    domProps: {
+                      checked: Array.isArray(_vm.inputRemember)
+                        ? _vm._i(_vm.inputRemember, null) > -1
+                        : _vm.inputRemember,
+                    },
+                    on: {
+                      change: function ($event) {
+                        var $$a = _vm.inputRemember,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 && (_vm.inputRemember = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.inputRemember = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.inputRemember = $$c
+                        }
+                      },
+                    },
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "ch-text" }, [
+                    _vm._v(" New images not required "),
+                  ]),
+                ]),
+                _c("hr"),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { type: "button" },
+                  on: { click: _vm.editOnePost },
+                },
+                [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(
+                        _vm.isCreatingPost
+                          ? "Updating..."
+                          : "Start Post Updating "
+                      ) +
+                      "\n                        "
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { type: "button" },
+                  on: { click: _vm.clearInputFieldsAndFiles },
+                },
+                [
+                  _vm._v(
+                    "\n                            Clear\n                        "
+                  ),
+                ]
+              ),
+            ]),
+          ],
+          2
+        )
+      : _vm._e(),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -106725,7 +106819,7 @@ var render = function () {
     _vm._v(" "),
     _c("h1", [
       _vm._v(
-        _vm._s(_vm.title) + " number " + _vm._s(this.currentDetailID + 1) + " "
+        _vm._s(_vm.title) + " number " + _vm._s(this.$route.params.Pidd) + " "
       ),
     ]),
     _vm._v(" "),
@@ -106749,7 +106843,7 @@ var render = function () {
                     [
                       _vm._v(
                         " No data fetched for yout Post " +
-                          _vm._s(this.currentDetailID + 1) +
+                          _vm._s(this.$route.params.Pidd) +
                           " , visit first "
                       ),
                       _c(
@@ -106765,233 +106859,277 @@ var render = function () {
                     1
                   ),
                 ])
-              : _c("div", [
-                  _c(
-                    "div",
-                    [
-                      _c("hr"),
-                      _vm._v(" "),
-                      _c(
-                        "p",
-                        { staticClass: "z-overlay-fix-2" },
-                        [
-                          _c(
-                            "router-link",
-                            { staticClass: "nav-link", attrs: { to: "/blog" } },
-                            [
-                              _c("button", { staticClass: "btn btn-info" }, [
-                                _vm._v("Back to Vue Crud Panel "),
-                                _c("i", {
-                                  staticClass: "fa fa-tag",
-                                  staticStyle: { "font-size": "14px" },
-                                }),
-                              ]),
-                            ]
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("p", [
-                        _vm._v(
-                          " One product " +
-                            _vm._s(this.currentDetailID + 1) +
-                            " "
-                        ),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", [
-                        _c("b", [
-                          _c("i", { staticClass: "fa fa-book" }),
-                          _vm._v(
-                            " Article id:         " +
-                              _vm._s(
-                                this.$store.state.posts[this.currentDetailID]
-                                  .wpBlog_id
-                              ) +
-                              "  "
-                          ),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", [
-                        _c("b", [
-                          _c("i", { staticClass: "fa fa-calendar-check-o" }),
-                          _vm._v(
-                            " Title: " +
-                              _vm._s(
-                                this.$store.state.posts[this.currentDetailID]
-                                  .wpBlog_title
-                              ) +
-                              " "
-                          ),
-                        ]),
-                      ]),
-                      _vm._v(" "),
-                      _c("p"),
-                      this.$store.state.posts[this.currentDetailID].get_images
-                        .length
-                        ? _c("div", [
+              : _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
+                  this.$store.state.posts[this.currentDetailID] == undefined
+                    ? _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          { staticClass: "text-danger" },
+                          [
+                            _vm._v(
+                              " Article ID " +
+                                _vm._s(this.$route.params.Pidd) +
+                                " does not exist , visit first "
+                            ),
                             _c(
-                              "a",
+                              "router-link",
                               {
-                                attrs: {
-                                  href:
-                                    "images/wpressImages/" +
-                                    this.$store.state.posts[
-                                      this.currentDetailID
-                                    ].get_images[0].wpImStock_name,
-                                  title: "text",
-                                  "data-lightbox":
-                                    "roadtrip" +
-                                    this.$store.state.posts[
-                                      this.currentDetailID
-                                    ].wpBlog_id,
-                                },
+                                staticClass: "nav-link",
+                                attrs: { to: "/blog" },
                               },
                               [
-                                _c("img", {
-                                  staticClass: "card-img-top image-main",
-                                  attrs: {
-                                    src:
-                                      "images/wpressImages/" +
-                                      this.$store.state.posts[
-                                        this.currentDetailID
-                                      ].get_images[0].wpImStock_name,
-                                  },
-                                }),
+                                _c(
+                                  "button",
+                                  { staticClass: "btn btn-success" },
+                                  [_vm._v(" Vue Crud panel ")]
+                                ),
                               ]
                             ),
-                          ])
-                        : _c("div", [
-                            _c("img", {
-                              staticClass: "card-img-top my-img-small",
-                              attrs: { src: "images/no-image-found.png" },
-                            }),
-                          ]),
-                      _vm._v(" "),
-                      _c("p"),
-                      _c("p", [
-                        _vm._v(
-                          " Text:     " +
-                            _vm._s(
-                              this.$store.state.posts[this.currentDetailID]
-                                .wpBlog_text
-                            ) +
-                            " "
+                          ],
+                          1
                         ),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", [
-                        _vm._v(
-                          " Author:   " +
-                            _vm._s(
-                              this.$store.state.posts[this.currentDetailID]
-                                .author_name != null
-                                ? this.$store.state.posts[this.currentDetailID]
-                                    .author_name.name
-                                : "No author"
-                            ) +
-                            " "
-                        ),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", [
-                        _vm._v(
-                          " Email:    " +
-                            _vm._s(
-                              this.$store.state.posts[this.currentDetailID]
-                                .author_name != null
-                                ? this.$store.state.posts[this.currentDetailID]
-                                    .author_name.email
-                                : "No email"
-                            ) +
-                            " "
-                        ),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "smallX font-italic" }, [
-                        _c("i", { staticClass: "fa fa-archive" }),
-                        _vm._v(
-                          "     " +
-                            _vm._s(
-                              this.$store.state.posts[this.currentDetailID]
-                                .category_names.wpCategory_name
-                            ) +
-                            " "
-                        ),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "smallX" }, [
-                        _c("i", { staticClass: "fa fa-bank" }),
-                        _vm._v(" "),
-                        _c("span", {
-                          domProps: {
-                            innerHTML: _vm._s(
-                              _vm.getIfPublished(
-                                this.$store.state.posts[this.currentDetailID]
-                                  .wpBlog_status
-                              )
-                            ),
-                          },
-                        }),
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "smallX" }, [
-                        _vm._v(
-                          "Created:   " +
-                            _vm._s(
-                              this.$store.state.posts[this.currentDetailID]
-                                .wpBlog_created_at
-                            )
-                        ),
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(
-                        this.$store.state.posts[this.currentDetailID]
-                          .get_images,
-                        function (img, i) {
-                          return _c(
-                            "div",
-                            { key: i, staticClass: "col-md-12" },
-                            [
-                              i > 0
-                                ? _c("div", [
+                      ])
+                    : _c("div", { staticClass: "col-sm-12 col-xs-12" }, [
+                        _c(
+                          "div",
+                          [
+                            _c("hr"),
+                            _vm._v(" "),
+                            _c(
+                              "p",
+                              { staticClass: "z-overlay-fix-2" },
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "nav-link",
+                                    attrs: { to: "/blog" },
+                                  },
+                                  [
                                     _c(
-                                      "a",
-                                      {
-                                        attrs: {
-                                          href:
-                                            "images/wpressImages/" +
-                                            img.wpImStock_name +
-                                            "}",
-                                          title: "text",
-                                          "data-lightbox":
-                                            "roadtrip" + img.wpImStock_id,
-                                        },
-                                      },
+                                      "button",
+                                      { staticClass: "btn btn-info" },
                                       [
-                                        _c("img", {
-                                          staticClass:
-                                            "card-img-top image-others",
-                                          attrs: {
-                                            src:
-                                              "images/wpressImages/" +
-                                              img.wpImStock_name +
-                                              "}",
-                                          },
+                                        _vm._v("Back to Vue Crud Panel "),
+                                        _c("i", {
+                                          staticClass: "fa fa-tag",
+                                          staticStyle: { "font-size": "14px" },
                                         }),
                                       ]
                                     ),
-                                  ])
-                                : _vm._e(),
-                            ]
-                          )
-                        }
-                      ),
-                    ],
-                    2
-                  ),
+                                  ]
+                                ),
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("p", [
+                              _c("b", [
+                                _c("i", { staticClass: "fa fa-book" }),
+                                _vm._v(
+                                  " Article id:         " +
+                                    _vm._s(
+                                      this.$store.state.posts[
+                                        this.currentDetailID
+                                      ].wpBlog_id
+                                    ) +
+                                    "  "
+                                ),
+                              ]),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _c("b", [
+                                _c("i", {
+                                  staticClass: "fa fa-calendar-check-o",
+                                }),
+                                _vm._v(
+                                  " Title: " +
+                                    _vm._s(
+                                      this.$store.state.posts[
+                                        this.currentDetailID
+                                      ].wpBlog_title
+                                    ) +
+                                    " "
+                                ),
+                              ]),
+                            ]),
+                            _vm._v(" "),
+                            _c("p"),
+                            this.$store.state.posts[this.currentDetailID]
+                              .get_images.length
+                              ? _c("div", [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href:
+                                          "images/wpressImages/" +
+                                          this.$store.state.posts[
+                                            this.currentDetailID
+                                          ].get_images[0].wpImStock_name,
+                                        title: "text",
+                                        "data-lightbox":
+                                          "roadtrip" +
+                                          this.$store.state.posts[
+                                            this.currentDetailID
+                                          ].wpBlog_id,
+                                      },
+                                    },
+                                    [
+                                      _c("img", {
+                                        staticClass: "card-img-top image-main",
+                                        attrs: {
+                                          src:
+                                            "images/wpressImages/" +
+                                            this.$store.state.posts[
+                                              this.currentDetailID
+                                            ].get_images[0].wpImStock_name,
+                                        },
+                                      }),
+                                    ]
+                                  ),
+                                ])
+                              : _c("div", [
+                                  _c("img", {
+                                    staticClass: "card-img-top my-img-small",
+                                    attrs: { src: "images/no-image-found.png" },
+                                  }),
+                                ]),
+                            _vm._v(" "),
+                            _c("p"),
+                            _c("p", [
+                              _vm._v(
+                                " Text:     " +
+                                  _vm._s(
+                                    this.$store.state.posts[
+                                      this.currentDetailID
+                                    ].wpBlog_text
+                                  ) +
+                                  " "
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                " Author:   " +
+                                  _vm._s(
+                                    this.$store.state.posts[
+                                      this.currentDetailID
+                                    ].author_name != null
+                                      ? this.$store.state.posts[
+                                          this.currentDetailID
+                                        ].author_name.name
+                                      : "No author"
+                                  ) +
+                                  " "
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                " Email:    " +
+                                  _vm._s(
+                                    this.$store.state.posts[
+                                      this.currentDetailID
+                                    ].author_name != null
+                                      ? this.$store.state.posts[
+                                          this.currentDetailID
+                                        ].author_name.email
+                                      : "No email"
+                                  ) +
+                                  " "
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "smallX font-italic" }, [
+                              _c("i", { staticClass: "fa fa-archive" }),
+                              _vm._v(
+                                "     " +
+                                  _vm._s(
+                                    this.$store.state.posts[
+                                      this.currentDetailID
+                                    ].category_names.wpCategory_name
+                                  ) +
+                                  " "
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "smallX" }, [
+                              _c("i", { staticClass: "fa fa-bank" }),
+                              _vm._v(" "),
+                              _c("span", {
+                                domProps: {
+                                  innerHTML: _vm._s(
+                                    _vm.getIfPublished(
+                                      this.$store.state.posts[
+                                        this.currentDetailID
+                                      ].wpBlog_status
+                                    )
+                                  ),
+                                },
+                              }),
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "smallX" }, [
+                              _vm._v(
+                                "Created:   " +
+                                  _vm._s(
+                                    this.$store.state.posts[
+                                      this.currentDetailID
+                                    ].wpBlog_created_at
+                                  )
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(
+                              this.$store.state.posts[this.currentDetailID]
+                                .get_images,
+                              function (img, i) {
+                                return _c(
+                                  "div",
+                                  { key: i, staticClass: "col-md-12" },
+                                  [
+                                    i > 0
+                                      ? _c("div", [
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: {
+                                                href:
+                                                  "images/wpressImages/" +
+                                                  img.wpImStock_name +
+                                                  "}",
+                                                title: "text",
+                                                "data-lightbox":
+                                                  "roadtrip" + img.wpImStock_id,
+                                              },
+                                            },
+                                            [
+                                              _c("img", {
+                                                staticClass:
+                                                  "card-img-top image-others",
+                                                attrs: {
+                                                  src:
+                                                    "images/wpressImages/" +
+                                                    img.wpImStock_name +
+                                                    "}",
+                                                },
+                                              }),
+                                            ]
+                                          ),
+                                        ])
+                                      : _vm._e(),
+                                  ]
+                                )
+                              }
+                            ),
+                          ],
+                          2
+                        ),
+                      ]),
                 ]),
           ]),
         ])
