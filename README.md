@@ -1,3 +1,5 @@
+To do:
+add to migration -> Spatie api permission edir articles
 
 ### Readme
 > Implementation of Gii Crud Admin Panle (crud admin panel simple(web) and Vue admin crud panel(api))
@@ -9,6 +11,7 @@
 ## Screenshots
 
 ### Crud admin panel simple(web)
+![Screenshot](public/images/Screenshots/1.1.png)
 ![Screenshot](public/images/Screenshots/1.png)
 ![Screenshot](public/images/Screenshots/2.png)
 ![Screenshot](public/images/Screenshots/3.png)
@@ -16,7 +19,12 @@
 ![Screenshot](public/images/Screenshots/5.png)
 
 ### Vue admin crud panel(api)
-
+![Screenshot](public/images/Screenshots/6.png)
+![Screenshot](public/images/Screenshots/7.png)
+![Screenshot](public/images/Screenshots/8.png)
+![Screenshot](public/images/Screenshots/9.png)
+![Screenshot](public/images/Screenshots/10.png)
+![Screenshot](public/images/Screenshots/11.png)
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 

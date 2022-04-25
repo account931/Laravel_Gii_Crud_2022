@@ -102,7 +102,9 @@ class wpress_images_blog_post_Seeder extends Seeder {
 class WpressImages_ImagesStock_Seeder extends Seeder {
     public function run()
     {
-	    DB::table('wpress_image_images_stocks')->delete();  //whether to Delete old materials
+	    //DB::table('wpress_image_images_stocks')->delete();  //whether to Delete old materials
+		DB::statement('SET FOREIGN_KEY_CHECKS=0');       //way to set auto increment back to 1 before seeding a table (instead of ->delete())
+        DB::table('wpress_image_images_stocks')->truncate(); //way to set auto increment back to 1 before seeding a table
         
 		$NUMBER_OF_ARTICLES = 20;
         $faker = Faker::create();
@@ -174,17 +176,32 @@ class Spatie_Seeder extends Seeder {
         }
         
         if($flag_role_exist == false){
+			
+			//DB::table('permissions')->delete();  //whether to Delete old materials
+		    DB::statement('SET FOREIGN_KEY_CHECKS=0');       //way to set auto increment back to 1 before seeding a table (instead of ->delete())
+            DB::table('permissions')->truncate(); //way to set auto increment back to 1 before seeding a table
+			DB::table('roles')->truncate(); //way to set auto increment back to 1 before seeding a table
+			DB::table('role_has_permissions')->truncate(); //way to set auto increment back to 1 before seeding a table
+			DB::table('model_has_permissions')->truncate(); //way to set auto increment back to 1 before seeding a table
+			DB::table('roles')->truncate(); //way to set auto increment back to 1 before seeding a table
+
         
-            $role             = Role::create(['name' => 'AdminX']); //create role
-            $permissionEdit   = Permission::create(['name' => 'edit articles']); //create permisssion 'edit articles'
-            $permissionDelete = Permission::create(['name' => 'delete articles']); //create permisssion 'delete articles'
-            $role->givePermissionTo($permissionEdit); //assign permission to role 
-            $role->givePermissionTo($permissionDelete); //assign permission to role 
+            $role              = Role::create(['name' => 'AdminX']); //create role
+			
+            $permissionEdit    = Permission::create(['guard_name' => 'web', 'name' => 'edit articles']); //create permisssion 'edit articles'
+            $permissionDelete  = Permission::create(['guard_name' => 'web', 'name' => 'delete articles']); //create permisssion 'delete articles'
+			//Create permission for Api guard(for Rest Api)(needed when u use Spatie both for http & Rest Api in one application)
+			$permissionEditApi = Permission::create(['guard_name' => 'api', 'name' => 'create_articles']);
+			
+            $role->givePermissionTo($permissionEdit);    //assign permission to role 
+            $role->givePermissionTo($permissionDelete);  //assign permission to role 
+			//$role->givePermissionTo($permissionEditApi); //assign permission to role //crashing
             
             //$userX = auth()->user(); //current user
             $userX =  User::where('id', '=', 2)->first();
             $userX->givePermissionTo($permissionEdit); //$user->givePermissionTo('edit articles'); //give the user certain permission
             $userX->givePermissionTo($permissionDelete);
+			//$userX->givePermissionTo($permissionEditApi); //crashing
             //dd($role . " is created ");
         }
     }

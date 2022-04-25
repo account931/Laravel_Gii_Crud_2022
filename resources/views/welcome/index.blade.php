@@ -66,7 +66,8 @@
 					<ul>
 				        <li>One blog article can have one or more images are lightboxed.</li>
 					    <li>This Wpress Image Blog uses it's own 3-table DB</li>
-						<li>Spatie Rbac</li>
+						<li>Spatie Rbac for regular HTTP request</li>
+						<li>Passport Api +Spatie Rbac for Vue Admin Panel</li>
 				    </ul>
 					
 				    <!--  -->

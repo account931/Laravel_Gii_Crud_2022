@@ -292,7 +292,29 @@ class CrudController extends Controller
 		   throw new \App\Exceptions\myException('It is not your article');
 	   } */
 	   
-	   Wpress_images_Posts::where('wpBlog_id',$id)->delete();
+	    if ($articleOne->getImages->isEmpty()){
+            //$text.= ' No images connected to post found. ';
+        } else {
+            foreach($articleOne->getImages as $f){
+                //$text.= " Id to delete: " . $f->wpImStock_id . " ";
+                
+                
+                //Delete relevant images from folder 'images/wpressImages/'
+                if(file_exists(public_path('images/wpressImages/' .  $f->wpImStock_name))){
+		            \Illuminate\Support\Facades\File::delete('images/wpressImages/' . $f->wpImStock_name);
+		        }
+                
+                //Delete relevant images from DB table {Wpress_ImagesStock} (images connected to post blog). Not much required as due to relation connected images are delete from DB {Wpress_ImagesStock} automatically
+                $img = Wpress_ImagesStock::findOrFail($f->wpImStock_id); 
+                $img->delete();
+                
+            }
+                
+        }
+		
+		
+	   //Wpress_images_Posts::where('wpBlog_id',$id)->delete();
+	   $articleOne->delete(); //delete the Post itself from DB  {Wpress_images_Posts}  
 	   return redirect('/crud-simple')->with('flashMessageX', "Record " . $id  . " was deleted successfully");
 
 	   

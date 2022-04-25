@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Storage;
 use Illuminate\Support\Facades\DB;
-use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Posts; //model for all posts
+use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Posts;    //model for all posts
 use App\models\wpBlogImages\Vue_API_Models\Wpress_images_Category; //model for all Wpress_images_Category
+use App\models\wpBlogImages\Vue_API_Models\Wpress_ImagesStock; //table for images
 use App\User; 
 use App\Http\Requests\Wpress_Images\Vue_API_Requests\SaveNewWpressImages_ApiRequest;
 use App\Http\Requests\Wpress_Images\Vue_API_Requests\UpdateRecordWpressImages_ApiRequest;
@@ -96,7 +97,7 @@ class VueCrud_Rest_API_Contoller extends Controller
         }
         */
         
-        $posts = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->orderBy('wpBlog_created_at', 'desc')->get(); //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
+        $posts = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->orderBy('wpBlog_id'/* 'wpBlog_created_at'*/, 'desc')->get(); //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
         return response()->json(['error' => false, 'data' => $posts]);
     }
 	
@@ -118,7 +119,9 @@ class VueCrud_Rest_API_Contoller extends Controller
 	
 	
 	
-
+	
+    //View one article 
+	//no method for "View one article", view one record is extracted from Vuex store (this.$store.state.posts[this.currentDetailID].wpBlog_title) 
 	
 
 	
@@ -367,6 +370,73 @@ class VueCrud_Rest_API_Contoller extends Controller
                     $deleteOldImg                //'While updating a user requested to delete Images' || 'User did not opted to delete any old images'
         ]);
         
+    }
+	
+	
+	
+	
+	
+	
+	/**
+     * Admin REST API endpoint to /DELETE one item (one post in DB {Wpress_images_Posts} and realtive images in DB {Wpress_ImagesStock})
+     * Ajax Requst for Delete comes from ........../resources/assets/js/WpBlog_Admin_Part/components/pages/list_all.vue
+     * Triggered by click
+     * @return json
+     */
+	public function deleteOneItem($idN) //http://localhost/Laravel_Gii_Crud_2022/public/public/vue-crud/admin_delete_item/{id}
+    {
+        
+        $data = Wpress_images_Posts::with('getImages')->findOrFail($idN);
+        //$data = Wpress_images_Posts::with('getImages', 'authorName', 'categoryNames')->where('wpBlog_id', $idN)->orderBy('wpBlog_created_at', 'desc')->get(); //->with('getImages', 'authorName', 'categoryNames') => hasMany/belongTo Eager Loading
+
+        /*
+        //version for $db->get(), i.e returns array of objects
+        $text = "";
+        foreach($data as $b){
+            if ($b->getImages->isEmpty()){
+                $text.= 'Screw ';
+            } else {
+                foreach($b->getImages as $f){
+                    $text.= " Id to delete: " . $f->wpImStock_id . " ";
+                }
+                
+            }
+           
+        }
+        */
+        
+        //version for $db->findOrFail($idN), i.e if it  returns one object
+        $text = "";
+        if ($data->getImages->isEmpty()){
+            $text.= ' No images connected to post found. ';
+        } else {
+            foreach($data->getImages as $f){
+                $text.= " Id to delete: " . $f->wpImStock_id . " ";
+                
+                
+                //Delete relevant images from folder 'images/wpressImages/'
+                if(file_exists(public_path('images/wpressImages/' .  $f->wpImStock_name))){
+		            \Illuminate\Support\Facades\File::delete('images/wpressImages/' . $f->wpImStock_name);
+		        }
+                
+                //Delete relevant images from DB table {Wpress_ImagesStock} (images connected to post blog)
+                $img = Wpress_ImagesStock::findOrFail($f->wpImStock_id); 
+                $img->delete();
+                
+            }
+                
+        }
+        
+        $data->delete(); //delete the Post itself from DB  {Wpress_images_Posts}       
+        
+        
+        
+        
+        return response()->json([
+            'error' => false, 
+            'data'  => 'Successfully deleted Post ID: ' . $idN . '. </br> ' .
+                       'Relevant images connected to post were deleted from Wpress_ImagesStock with IDs: ' . $text
+        ]);         
     }
 	
     

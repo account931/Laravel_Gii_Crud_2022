@@ -25,17 +25,25 @@ Route::post('api_register',   'Auth_API\UserAuthController@register');
 
 //Following routes are protected ty Bearer token (to be sent in Headers) + 'myJsonForce' middleware
 //middleware' => ['sendTokenMy', 'checkX', 'auth:api'] // middleware' => 'auth', 'auth:api' //By default auth:api middleware requires each user to have a field in the database called api_token,
-Route::group(['middleware' => ['auth:api', 'myJsonForce', 'mySpatieRbacCheckRestApi'  ],  'prefix' => 'vue-crud'], function () { //url must contain /post/, i.e /post/get_all
+Route::group(['middleware' => ['auth:api', 'myJsonForce', 'mySpatieRbacCheckRestApi'  ],  'prefix' => 'vue-crud'], function () { //url must contain /vue-crud/,  i.e /vue-crud/get_all. If /post/, i.e /post/get_all,
 
-    Route::get ('get_all',         'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts')      ->name('fetch_all');       //REST API to /GET all posts => api/post/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/post/get_all
+    //Read (all)
+    Route::get ('get_all',         'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllPosts')      ->name('fetch_all');       //REST API to /GET all posts, URL => api/vue-crud/get_all => CLEANSED_GIT_HUB/Laravel_Vue_Blog_V6_Passport/public/api/vue-crud/get_all
     
+	//Read one
+	// not engaed here, uses Vuex store
+	
 	//Create
-	Route::post('create_post_vue', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@createPost')       ->name('create_post_vue'); //REST API to /POST (create) a new blog
-	Route::get ('get_categories',  'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllCategories') ->name('get_categories');  //REST API to /GET all categories
+	Route::post('create_post_vue', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@createPost')       ->name('create_post_vue'); //REST API to /POST (create) a new blog, URL => .../public/api/vue-crud/create_post_vue
+	Route::get ('get_categories',  'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getAllCategories') ->name('get_categories');  //REST API to /GET all categories,       URL => .../public/api/vue-crud/get_categories
 	
 	//Update
-	Route::get ('edit_get_one_blog/{id}',   'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getEditOneItem')  ->name('edit_get_one_blog'); //REST API to /GET One post/item (by ID) for Admin Part. Controller is in Subfolder "/Vue_Crud_Panel". Used in Edit/Update Form
-    Route::put ('admin_update_item/{id}', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@AdminUpdateOneItem')->name('admin_update_item');  //REST API to /PUT Edit/Update one item
+	Route::get ('edit_get_one_blog/{id}',   'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@getEditOneItem')    ->name('edit_get_one_blog'); //REST API to /GET One post/item (by ID) for Admin Part. Controller is in Subfolder "/Vue_Crud_Panel". Used in Edit/Update Form
+    Route::put ('admin_update_item/{id}',   'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@AdminUpdateOneItem')->name('admin_update_item');  //REST API to /PUT Edit/Update one item
+ 
+ 
+    //Delete      
+	Route::delete('admin_delete_item/{id}', 'Vue_Crud_Panel\VueCrud_Rest_API_Contoller@deleteOneItem') ->name('admin_delete_item');  //REST API to /POST Delete one item, URL => .../public/api/vue-crud/admin_delete_item/{id
 
 	
 	

@@ -95,22 +95,25 @@
 						    <div class="col-sm-3 col-xs-2 card-header">
 																					
 							    <!-- View btn  -->
-							    <button class="btn btn-info" @click="goToViewDetail(post.wpBlog_id -1 )"> 
+							    <button class="btn btn-info" @click="goToViewDetail(post.wpBlog_id - 1 )"> 
 								    <i class="fa fa-eye" style="font-size:0.7em" onclick="return confirm('Are you sure to view?')"></i> 
 								</button>
 								
 											
 								<!-- Edit btn  -->
-								<button class="btn btn-success" @click="goToEditDetail(post.wpBlog_id -1 )" >  
+								<button class="btn btn-success" @click="goToEditDetail(post.wpBlog_id - 1 )" >  
 									<i class="fa fa-pencil" style="font-size:0.7em" onclick="return confirm('Are you sure to edit?')"></i> 
 								</button> 
 								
 											
 								<!-- Delete btn -->
-								<router-link to="/edit">  <!-- removed class="nav-link" in order btn to be on the same line, like <span> not <p> -->
-								    <button class="btn btn-danger"><i class="fa fa-trash-o" style="font-size:0.7em" onclick="return confirm('Are you sure to delete?')"></i> </button> 
-								</router-link> 
+								<!-- <router-link to="/edit"> --> <!-- removed class="nav-link" in order btn to be on the same line, like <span> not <p> -->
+								<!-- <button class="btn btn-danger"><i class="fa fa-trash-o" style="font-size:0.7em" onclick="return confirm('Are you sure to delete?')"></i> </button> 
+								</router-link> -->
 								
+								<button class="btn btn-danger"  @click="deletePost(post.wpBlog_id)">
+								    <i class="fa fa-trash-o" style="font-size:0.7em" onclick="return confirm('Are you sure to delete?')"></i>
+								</button>
 								
                                 <!-- End Delete bt -->
 											
@@ -231,7 +234,109 @@
             */
 		    imageUrlAlt(event) {
                 event.target.src = "images/image-corrupted.jpg"
-            },			
+            },	
+
+
+              
+           /*
+            |--------------------------------------------------------------------------
+            | Ajax to Delete one item
+            |--------------------------------------------------------------------------
+            |
+            |
+            */
+            deletePost(item){
+            
+                if(!confirm('Sure to delete Post ' + item + '?')){
+                    return false;
+                }
+                $('.loader-x').fadeIn(800); //show loader
+                var that = this; //to fix context issue
+                this.selectedItem = item;
+                alert('Delete ' + this.selectedItem + " Implement REST API delete function");
+                
+                //Add Bearer token to headers
+                $.ajaxSetup({
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY //PASSPORT api_tokenY
+                    }
+                }); 
+      
+		        $.ajax({
+                          
+		            url: 'api/vue-crud/admin_delete_item/' + this.selectedItem, 
+                    type: 'DELETE', //
+                    cache : false,
+                    dataType    : 'json',
+                    processData : false,
+                    contentType: false,
+			        //crossDomain: true,
+			        //headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY},  //this.$store.state.api_tokenY
+                    //headers: { 'Content-Type': 'application/json',  },
+			        //contentType: false,
+			        //dataType: 'json', //In Laravel causes crash!!!!!// without this it returned string(that can be alerted), now it returns object
+           
+			        //passing the data
+                    data: {},
+		    
+                    success: function(data) {
+                        alert("success");            
+                        alert("success" + JSON.stringify(data, null, 4));
+                
+                        if(data.error == true ){ //if Rest endpoint returns any predefined error
+                            var text = data.data;
+                            swal("Check", text, "error");
+                    
+                            //if validation errors (NOT THE CASE FOR DELETE) (i.e if REST Contoller returns json ['error': true, 'data': 'Good, but validation crashes', 'validateErrors': title['Validation err text'],  body['Validation err text']])
+                            if(data.validateErrors){
+                                var tempoArray = []; //temporary array
+                                for (var key in data.validateErrors) { //Object iterate
+                                    var t = data.validateErrors[key][0]; //gets validation err message, e.g validateErrors.title[0]
+                                    tempoArray.push(t);
+                                }
+                            }
+                        //if REST endpoint returns OK  
+                        } else if(data.error == false){
+                            swal("Good", "Bearer Token is OK", "success");
+                            swal({html:true, title: "Deletion was OK", text: data.data, type: "success"});
+                            that.runAjaxToGetPosts(); //renew the list
+                        }
+						$('.loader-x').fadeOut(800); //hide loader
+                    },  //end success
+            
+			        error: function (errorZ) {
+                        alert("Crashed"); 
+			            alert("error" +  JSON.stringify(errorZ, null, 4));
+                        console.log(errorZ.responseText);
+                        console.log(errorZ);
+                
+                        if(errorZ.responseJSON != null){
+                            if(errorZ.responseJSON.error == "Error: Request failed with status code 401" ||  errorZ.responseJSON.error == "Unauthenticated."){ //if Rest endpoint returns any predefined error
+                                swal("Error: Unauthenticated", "Check Bearer Token", "error"); 
+                                alert('Vuex log out - pre'); 
+								
+                                //Unlog the user if dataZ.error == "Unauthenticated." || 401, otherwise if user has wrong password token saved in Locals storage, he will always recieve error and neber log out                  
+                                that.$store.dispatch('LogUserOut'); //reset state vars (state.passport_api_tokenY + state.loggedUser) via mutation							   
+                            } else {  
+                               swal("Error", "Something else crashed", "error"); 
+                            }
+                        }
+                        //swal("Error", "Something crashed", "error"); //Commented or it will overleap and prevent to appear  swal("Error: Unauthenticated
+                        $('.loader-x').fadeOut(800); //hide loader						
+			        }	  
+                });                             
+                //END AJAXed  part 
+                
+            },
+			
+			
+			
+			
+			//to renew list
+			runAjaxToGetPosts(){
+			    this.$store.dispatch('getAllPosts'); //trigger ajax function getAllPosts(), which is executed in Vuex store to REST Endpoint => /public/post/get_all
+			},
+            			
     
 	
 			

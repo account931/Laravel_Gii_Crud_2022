@@ -4928,6 +4928,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
  //using other sub-component 
 
@@ -5021,6 +5024,108 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             */
     imageUrlAlt: function imageUrlAlt(event) {
       event.target.src = "images/image-corrupted.jpg";
+    },
+
+    /*
+     |--------------------------------------------------------------------------
+     | Ajax to Delete one item
+     |--------------------------------------------------------------------------
+     |
+     |
+     */
+    deletePost: function deletePost(item) {
+      if (!confirm('Sure to delete Post ' + item + '?')) {
+        return false;
+      }
+
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('.loader-x').fadeIn(800); //show loader
+
+      var that = this; //to fix context issue
+
+      this.selectedItem = item;
+      alert('Delete ' + this.selectedItem + " Implement REST API delete function"); //Add Bearer token to headers
+
+      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajaxSetup({
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY //PASSPORT api_tokenY
+
+        }
+      });
+      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        url: 'api/vue-crud/admin_delete_item/' + this.selectedItem,
+        type: 'DELETE',
+        //
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        //crossDomain: true,
+        //headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + this.$store.state.passport_api_tokenY},  //this.$store.state.api_tokenY
+        //headers: { 'Content-Type': 'application/json',  },
+        //contentType: false,
+        //dataType: 'json', //In Laravel causes crash!!!!!// without this it returned string(that can be alerted), now it returns object
+        //passing the data
+        data: {},
+        success: function success(data) {
+          alert("success");
+          alert("success" + JSON.stringify(data, null, 4));
+
+          if (data.error == true) {
+            //if Rest endpoint returns any predefined error
+            var text = data.data;
+            swal("Check", text, "error"); //if validation errors (NOT THE CASE FOR DELETE) (i.e if REST Contoller returns json ['error': true, 'data': 'Good, but validation crashes', 'validateErrors': title['Validation err text'],  body['Validation err text']])
+
+            if (data.validateErrors) {
+              var tempoArray = []; //temporary array
+
+              for (var key in data.validateErrors) {
+                //Object iterate
+                var t = data.validateErrors[key][0]; //gets validation err message, e.g validateErrors.title[0]
+
+                tempoArray.push(t);
+              }
+            } //if REST endpoint returns OK  
+
+          } else if (data.error == false) {
+            swal("Good", "Bearer Token is OK", "success");
+            swal({
+              html: true,
+              title: "Deletion was OK",
+              text: data.data,
+              type: "success"
+            });
+            that.runAjaxToGetPosts(); //renew the list
+          }
+
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()('.loader-x').fadeOut(800); //hide loader
+        },
+        //end success
+        error: function error(errorZ) {
+          alert("Crashed");
+          alert("error" + JSON.stringify(errorZ, null, 4));
+          console.log(errorZ.responseText);
+          console.log(errorZ);
+
+          if (errorZ.responseJSON != null) {
+            if (errorZ.responseJSON.error == "Error: Request failed with status code 401" || errorZ.responseJSON.error == "Unauthenticated.") {
+              //if Rest endpoint returns any predefined error
+              swal("Error: Unauthenticated", "Check Bearer Token", "error");
+              alert('Vuex log out - pre'); //Unlog the user if dataZ.error == "Unauthenticated." || 401, otherwise if user has wrong password token saved in Locals storage, he will always recieve error and neber log out                  
+
+              that.$store.dispatch('LogUserOut'); //reset state vars (state.passport_api_tokenY + state.loggedUser) via mutation							   
+            } else {
+              swal("Error", "Something else crashed", "error");
+            }
+          } //swal("Error", "Something crashed", "error"); //Commented or it will overleap and prevent to appear  swal("Error: Unauthenticated
+
+
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()('.loader-x').fadeOut(800); //hide loader						
+        }
+      }); //END AJAXed  part 
+    },
+    //to renew list
+    runAjaxToGetPosts: function runAjaxToGetPosts() {
+      this.$store.dispatch('getAllPosts'); //trigger ajax function getAllPosts(), which is executed in Vuex store to REST Endpoint => /public/post/get_all
     }
   }
 });
@@ -105897,8 +106002,17 @@ var render = function () {
                               ]
                             ),
                             _vm._v(" "),
-                            _c("router-link", { attrs: { to: "/edit" } }, [
-                              _c("button", { staticClass: "btn btn-danger" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.deletePost(post.wpBlog_id)
+                                  },
+                                },
+                              },
+                              [
                                 _c("i", {
                                   staticClass: "fa fa-trash-o",
                                   staticStyle: { "font-size": "0.7em" },
@@ -105907,10 +106021,9 @@ var render = function () {
                                       "return confirm('Are you sure to delete?')",
                                   },
                                 }),
-                              ]),
-                            ]),
-                          ],
-                          1
+                              ]
+                            ),
+                          ]
                         ),
                       ]
                     )

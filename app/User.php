@@ -14,7 +14,8 @@ class User extends Authenticatable
 	use HasRoles; //Spatie Laravel RBAC Permission
 	use HasApiTokens; // Passport Api
 
-
+    //$guard_name = 'web, api'; // Passport Api
+	 
     /**
      * The attributes that are mass assignable.
      *
