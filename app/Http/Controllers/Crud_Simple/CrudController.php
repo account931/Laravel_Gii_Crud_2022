@@ -304,7 +304,7 @@ class CrudController extends Controller
 		            \Illuminate\Support\Facades\File::delete('images/wpressImages/' . $f->wpImStock_name);
 		        }
                 
-                //Delete relevant images from DB table {Wpress_ImagesStock} (images connected to post blog). Not much required as due to relation connected images are delete from DB {Wpress_ImagesStock} automatically
+                //Delete relevant images from DB table {Wpress_ImagesStock} (images connected to post blog). Not much required as due to relation connected images are delete from DB {Wpress_ImagesStock} automatically ????
                 $img = Wpress_ImagesStock::findOrFail($f->wpImStock_id); 
                 $img->delete();
                 

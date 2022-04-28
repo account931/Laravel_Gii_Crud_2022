@@ -36,12 +36,17 @@ return [
     */
 
     'guards' => [
+	    /*
+	    'defaults' => [
+            'guard' => 'web',
+            'passwords' => 'users',
+        ], */
         
         //changed order (api first, wen second) to fix error "spatie/laravel-permission There is no permission named `edit_project` for guard `api`"
         //see detailes in ReadMe_Laravel_Com_Commands for error fix => There is no permission named `edit_project` for guard `api`
 		'api' => [
             'driver'   => 'passport', //'token',
-            'provider' => 'users',
+            'provider' => 'users_passport', //'users',
             'hash' => false,
         ],
 		
@@ -70,10 +75,19 @@ return [
     */
 
     'providers' => [
+	
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model'  => App\User::class,
         ],
+		
+		
+		'users_passport' => [
+            'driver' => 'eloquent',
+            'model'  => App\User_For_Passport::class, //The only purpose of this model is to use public $guard_name = 'api'; instead of public $guard_name = 'web'; 
+        ],
+		
+		
 
         // 'users' => [
         //     'driver' => 'database',

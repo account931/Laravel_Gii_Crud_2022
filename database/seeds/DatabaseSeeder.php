@@ -5,6 +5,7 @@ use Faker\Factory as Faker;
 use Spatie\Permission\Models\Role;       //Spatie RBAC built-in model
 use Spatie\Permission\Models\Permission; //Spatie RBAC built-in model
 use App\User;
+use App\User_For_Passport;
 
 class DatabaseSeeder extends Seeder
 {
@@ -193,15 +194,17 @@ class Spatie_Seeder extends Seeder {
 			//Create permission for Api guard(for Rest Api)(needed when u use Spatie both for http & Rest Api in one application)
 			$permissionEditApi = Permission::create(['guard_name' => 'api', 'name' => 'create_articles']);
 			
-            $role->givePermissionTo($permissionEdit);    //assign permission to role 
-            $role->givePermissionTo($permissionDelete);  //assign permission to role 
-			//$role->givePermissionTo($permissionEditApi); //assign permission to role //crashing
+            $role->givePermissionTo($permissionEdit);      //assign permission to role 'AdminX'
+            $role->givePermissionTo($permissionDelete);    //assign permission to role 'AdminX'
+			//$role->givePermissionTo($permissionEditApi); //assign permission to role 'AdminX' //crashing and it is normal as 'AdminX' has Db table guard_name "web". Want to fix, create new role with Db table guard_name "api" and assingn api permission//crashing with error "The given role or permission should use guard `web` instead of `api`"
             
             //$userX = auth()->user(); //current user
-            $userX =  User::where('id', '=', 2)->first();
-            $userX->givePermissionTo($permissionEdit); //$user->givePermissionTo('edit articles'); //give the user certain permission
-            $userX->givePermissionTo($permissionDelete);
-			//$userX->givePermissionTo($permissionEditApi); //crashing
+            $userX      = User::where('id', '=', 2)->first();   
+			$userXPassp = User_For_Passport::where('id', '=', 2)->first(); //The only purpose of this model is to use public $guard_name = 'api'; instead of public $guard_name = 'web'; 
+			
+            $userX     ->givePermissionTo($permissionEdit); //$user->givePermissionTo('edit articles'); //give the user certain permission
+            $userX     ->givePermissionTo($permissionDelete);
+			$userXPassp->givePermissionTo($permissionEditApi); //assingning Api permission
             //dd($role . " is created ");
         }
     }
